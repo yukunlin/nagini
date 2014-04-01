@@ -40,6 +40,12 @@ coverage.xml
 # Mr Developer
 .mr.developer.cfg
 .project
+
+# LaTeX irritation
+*.synctex.gz
+*.log
+*.aux
+*.pdfsync
 .pydevproject
 
 # Rope
