@@ -1,40 +1,56 @@
-\documentclass{article}
+\documentclass[11pt]{article}
+
+%<<< packages
+\usepackage[margin=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{titling}
+%>>>
+
+\setlength{\droptitle}{-1.9cm}
+
+\title{Final Project Proposal}
+\author{Teo Asinari, Yukun Lin}
+\date{April 1, 2014}
 \begin{document}
-\noindent Teo Asinari\\
-Yukun Lin\\
-CSCI 152 HM-01\\
-Prof. Keller\\
-Final Project Proposal\\
 
-Below are some tentative problem statements:\\
+\maketitle
 
-Problem 1:\\
-Construct, train an ANN to provide input to a PID controller for \\
-a virtual inverted pendulum. We seek to produce an ANN that will minimize
-the time-to-stability of the pendulum.\\
-Moreover, it will fit constants to a desired damping function.\\
-We are planned for the inverted pendulum to damp using \\
-an exponentially decaying sinusoid.\\
-An alternative is to use the ANN as a direct \\
-replacement for the PID - this will require more work.\\
+\section{Introduction}
 
-Problem 2:\\
-Potentially extend the work of (1) to improve control for larger vehicles.\\
-A possible example is an AUV for shark tracking.\\
+The task of a controller is to determine and manipulate the inputs of a system in a way
+such that the output of that system matches with some desired outputs. For the purpose of
+maintaining a stable desired output, PID (proportional, integral, derivative) controllers
+are typically used.
+
+\section{Problem Statements}
+Our proposed project is to build and train a neural networks to serve the purpose of a
+controller. The network will attempt to stabilize an inverted pendulum on a moving
+platform. Below are some tentative problem statements.
+
+In all three problems, we will start with a simple ANN e.g., Adaline, and move on in
+complexity (next step is MLP) until we stop seeing improvements.  We plan to use Python
+for the implementation (Theano or Scikitlearn).
+
+\subsection{Problem 1}
+Construct, train network to imitate the behaviour of a PID controller. For example, given
+the desired error (of the system) as a function of time, train a network to output control
+signals that will be able to achieve that. If we take the error of a PID controller as
+that desired error, then training the network to achieve that may give it the behaviour of
+a PID controller.
+
+\subsection{Problem 2}
+For a PID controller to be stable, the constants it uses for its proportional, integral
+and derivative term must be properly chosen. Thus, we propose training a network that can
+determine the optimal constants for a PID controller, where the optimal constants are
+those that achieve system stability in the shortest amount of time.
+
+\subsection{Problem 3}
+Extend the works of problem 1 and 2 by using a genetic algorithm to train the network.
 
 
-Problem 3:\\
-Extend the works of (1) and (2) to involve some form of genetic \\
-programming.\\
 
+\section{Reference}
 
-\noindent In all three cases, we will start with a simple ANN\\
-e.g., Adaline, and move on in complexity (next step is MLP)\\
-until we stop seeing improvements.\\
-We plan to use Python for the implementation (Theano or Scikitlearn).\\
-
-
-Reference:\\
 http://deeplearning.net/tutorial/DBN.html\\
 http://www.iro.umontreal.ca/\textasciitilde bengioy/papers/ftml\_book.pdf\\
 http://www.cs.toronto.edu/\textasciitilde ranzato/publications/DistBeliefNIPS2012\_withAppendix.pdf\\

@@ -47,6 +47,7 @@ coverage.xml
 *.log
 *.aux
 *.pdfsync
+*.pdf
 
 # Rope
 .ropeproject
