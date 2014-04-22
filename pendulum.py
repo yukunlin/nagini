@@ -1,4 +1,4 @@
-from scipy import array
+from numpy import array
 from math import *
 
 class InvertedPendulum:
