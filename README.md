@@ -10,6 +10,11 @@ The task of a controller is to determine and manipulate the inputs of a system i
   <img src="https://raw.githubusercontent.com/yukunlin/nagini/master/pid.gif">
 </p>
 
-Balancing an inverted pendulum is a classic control problem. The embedded clip above  Our goal is to design a recurrent neural network that is able perform as well as (or better) than a PID controller at balancing the inverted pendulum.
+Balancing an inverted pendulum is a classic control problem.
+
+###Approach
+Our goal is to design a recurrent neural network (RNN) that is able perform as well as (or better) than a PID controller at balancing the inverted pendulum.
+
+We will do this through an RNN implementation in Theano.
 
 
