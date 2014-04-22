@@ -1,11 +1,11 @@
-#Nagini: (N)eur(a)l networks controller for a (g)enerated (i)(n)verted pendulum (i)nterface
+##Nagini: (N)eur(a)l networks controller for a (g)enerated (i)(n)verted pendulum (i)nterface
 
 
-##Background
+###Background
 
 The task of a controller is to determine and manipulate the inputs of a system in a way such that the output of that system matches with some desired outputs. For the purpose of maintaining a stable desired output, PID (proportional, integral, derivative) controllers are typically used.
 
-##Problem Statement
+###Problem Statement
 <p align="center">
   <img src="https://raw.githubusercontent.com/yukunlin/nagini/master/pid.gif">
 </p>
