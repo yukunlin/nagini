@@ -5,10 +5,11 @@
 
 The task of a controller is to determine and manipulate the inputs of a system in a way such that the output of that system matches with some desired outputs. For the purpose of maintaining a stable desired output, PID (proportional, integral, derivative) controllers are typically used.
 
-
 ##Problem Statement
+<p align="center">
+  <img src="https://raw.githubusercontent.com/yukunlin/nagini/master/pid.gif">
+</p>
 
-![alt tag](https://raw.github.com/yukunlin/nngapid/master/pid.png)
-Balancing an inverted pendulum is a classic control problem. Our goal is to design a recurrent neural network that is able perform as well as (or better) than a PID controller at balancing the inverted pendulum.
+Balancing an inverted pendulum is a classic control problem. The embedded clip above  Our goal is to design a recurrent neural network that is able perform as well as (or better) than a PID controller at balancing the inverted pendulum.
 
 
