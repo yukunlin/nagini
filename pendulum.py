@@ -36,6 +36,5 @@ class InvertedPendulum:
         self.control = controlInput
         self.time += self.DT
         self.translational[1] = (controlInput / self.MASS) * self.DT + self.translational[1]
-        print (controlInput / self.MASS) * self.DT + self.translational[1]
         self.translational[0] = self.translational[1] * self.DT + self.translational[0]
         self.rotational = self.rungeKutta(self.rotational)
