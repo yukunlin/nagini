@@ -3,10 +3,10 @@ from math import *
 
 class InvertedPendulum:
     def __init__(self):
-        self.time = 0
+        self.time = 0.0
         self.rotational = array([pi,0])
-        self.translational = array([0,0])
-        self.control = 0
+        self.translational = array([0.0,0.0])
+        self.control = 0.0
 
         self.LENGTH = 0.5
         self.GRAVITY = 9.81
@@ -39,5 +39,3 @@ class InvertedPendulum:
         print (controlInput / self.MASS) * self.DT + self.translational[1]
         self.translational[0] = self.translational[1] * self.DT + self.translational[0]
         self.rotational = self.rungeKutta(self.rotational)
-
-ip = InvertedPendulum()
