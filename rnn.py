@@ -451,9 +451,9 @@ class MetaRNN(BaseEstimator):
 
 def test_real():
     """ Test RNN with real-valued outputs. """
-    n_hidden = 10
+    n_hidden = 25
     n_in = 5
-    n_out = 3
+    n_out = 1
     n_steps = 10
     n_seq = 100
 
@@ -462,9 +462,9 @@ def test_real():
     seq = np.random.randn(n_seq, n_steps, n_in)
     targets = np.zeros((n_seq, n_steps, n_out))
 
-    targets[:, 1:, 0] = seq[:, :-1, 3]  # delayed 1
-    targets[:, 1:, 1] = seq[:, :-1, 2]  # delayed 1
-    targets[:, 2:, 2] = seq[:, :-2, 0]  # delayed 2
+    # targets[:, 1:, 0] = seq[:, :-1, 3]  # delayed 1
+    # targets[:, 1:, 1] = seq[:, :-1, 2]  # delayed 1
+    # targets[:, 2:, 2] = seq[:, :-2, 0]  # delayed 2
 
     targets += 0.01 * np.random.standard_normal(targets.shape)
 
@@ -492,7 +492,7 @@ def test_real():
 
 def test_binary(multiple_out=False, n_epochs=250):
     """ Test RNN with binary outputs. """
-    n_hidden = 10
+    n_hidden = 25
     n_in = 5
     if multiple_out:
         n_out = 2
@@ -523,7 +523,7 @@ def test_binary(multiple_out=False, n_epochs=250):
 
     seqs = xrange(10)
 
-    plt.close('all')
+    # plt.close('all')
     for seq_num in seqs:
         fig = plt.figure()
         ax1 = plt.subplot(211)
@@ -545,9 +545,9 @@ def test_softmax(n_epochs=250):
     """ Test RNN with softmax outputs. """
     n_hidden = 25
     n_in = 4
-    n_steps = 1000
-    n_seq = 1
-    n_classes = 3
+    n_steps = 10
+    n_seq = 100
+    n_classes = 1
     n_out = n_classes  # restricted to single softmax per time step
 
     np.random.seed(0)
@@ -596,8 +596,11 @@ def test_softmax(n_epochs=250):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     t0 = time.time()
-    test_real()
+
+    # test_softmax(n_epochs=500)
     # problem takes more epochs to solve
-    #test_binary(multiple_out=True, n_epochs=2400)
-    #test_softmax(n_epochs=250)
+    test_real()
+    # test_binary(multiple_out=True, n_epochs=400)
+    # test_softmax(n_epochs=250)
     print "Elapsed time: %f" % (time.time() - t0)
+    raw_input()
