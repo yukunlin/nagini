@@ -4,10 +4,8 @@ __date__ = '2014-02-19'
 
 import csv
 import matplotlib.pyplot as plt
-import time
 import numpy
 import math
-import os
 from numpy import *
 from numpy.random import *
 from numpy.matrixlib import *
