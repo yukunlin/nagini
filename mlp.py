@@ -1,204 +1,183 @@
-# Adapted from http://deeplearning.net/tutorial/code/mlp.py
+""" MLP in Python """
+__author__ = 'Teo Asinari'
+__date__ = '2014-02-19'
 
-import cPickle
-import gzip
-import os
-import sys
+import csv
+import matplotlib.pyplot as plt
 import time
-
 import numpy
-
-import theano
-import theano.tensor as T
-
-
-from logistic_sgd import LogisticRegression, load_data
-
-
-class HiddenLayer(object):
-    def __init__(self, rng, input, n_in, n_out, W=None, b=None,
-                 activation=T.tanh):
-
-        self.input = input
-
-        if W is None:
-            W_values = numpy.asarray(rng.uniform(
-                    low=-numpy.sqrt(6. / (n_in + n_out)),
-                    high=numpy.sqrt(6. / (n_in + n_out)),
-                    size=(n_in, n_out)), dtype=theano.config.floatX)
-            if activation == theano.tensor.nnet.sigmoid:
-                W_values *= 4
-
-            W = theano.shared(value=W_values, name='W', borrow=True)
-
-        if b is None:
-            b_values = numpy.zeros((n_out,), dtype=theano.config.floatX)
-            b = theano.shared(value=b_values, name='b', borrow=True)
-
-        self.W = W
-        self.b = b
-
-        lin_output = T.dot(input, self.W) + self.b
-        self.output = (lin_output if activation is None
-                       else activation(lin_output))
-
-        self.params = [self.W, self.b]
+import math
+import os
+from numpy import *
+from numpy.random import *
+from numpy.matrixlib import *
 
 
-class MLP(object):
-
-    def __init__(self, rng, input, n_in, n_hidden, n_out):
-
-        self.hiddenLayer = HiddenLayer(rng=rng, input=input,
-                                       n_in=n_in, n_out=n_hidden,
-                                       activation=T.tanh)
-
-        self.logRegressionLayer = LogisticRegression(
-            input=self.hiddenLayer.output,
-            n_in=n_hidden,
-            n_out=n_out)
-
-        self.L1 = abs(self.hiddenLayer.W).sum() \
-                + abs(self.logRegressionLayer.W).sum()
-
-        self.L2_sqr = (self.hiddenLayer.W ** 2).sum() \
-                    + (self.logRegressionLayer.W ** 2).sum()
-
-        self.negative_log_likelihood = self.logRegressionLayer.negative_log_likelihood
-        self.errors = self.logRegressionLayer.errors
-
-        self.params = self.hiddenLayer.params + self.logRegressionLayer.params
+# Activation functions
+def tansig(x):
+    return math.tanh(x)
 
 
-def test_mlp(learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=1000,
-             dataset='mnist.pkl.gz', batch_size=20, n_hidden=500):
-
-    datasets = load_data(dataset)
-
-    train_set_x, train_set_y = datasets[0]
-    valid_set_x, valid_set_y = datasets[1]
-    test_set_x, test_set_y = datasets[2]
-
-    n_train_batches = train_set_x.get_value(borrow=True).shape[0] / batch_size
-    n_valid_batches = valid_set_x.get_value(borrow=True).shape[0] / batch_size
-    n_test_batches = test_set_x.get_value(borrow=True).shape[0] / batch_size
-
-    print '... building the model'
-
-    index = T.lscalar()  # index to a [mini]batch
-    x = T.matrix('x')  # the data is presented as rasterized images
-    y = T.ivector('y')  # the labels are presented as 1D vector of
-                        # [int] labels
-
-    rng = numpy.random.RandomState(1234)
-
-    classifier = MLP(rng=rng, input=x, n_in=28 * 28,
-                     n_hidden=n_hidden, n_out=10)
-
-    cost = classifier.negative_log_likelihood(y) \
-         + L1_reg * classifier.L1 \
-         + L2_reg * classifier.L2_sqr
-
-    test_model = theano.function(inputs=[index],
-            outputs=classifier.errors(y),
-            givens={
-                x: test_set_x[index * batch_size:(index + 1) * batch_size],
-                y: test_set_y[index * batch_size:(index + 1) * batch_size]})
-
-    validate_model = theano.function(inputs=[index],
-            outputs=classifier.errors(y),
-            givens={
-                x: valid_set_x[index * batch_size:(index + 1) * batch_size],
-                y: valid_set_y[index * batch_size:(index + 1) * batch_size]})
-
-    gparams = []
-    for param in classifier.params:
-        gparam = T.grad(cost, param)
-        gparams.append(gparam)
-
-    updates = []
-
-    for param, gparam in zip(classifier.params, gparams):
-        updates.append((param, param - learning_rate * gparam))
-
-    train_model = theano.function(inputs=[index], outputs=cost,
-            updates=updates,
-            givens={
-                x: train_set_x[index * batch_size:(index + 1) * batch_size],
-                y: train_set_y[index * batch_size:(index + 1) * batch_size]})
-
-    print '... training'
-
-    patience = 10000  # look as this many examples regardless
-    patience_increase = 2  # wait this much longer when a new best is
-                           # found
-    improvement_threshold = 0.995  # a relative improvement of this much is
-                                   # considered significant
-    validation_frequency = min(n_train_batches, patience / 2)
-                                  # go through this many
-                                  # minibatche before checking the network
-                                  # on the validation set; in this case we
-                                  # check every epoch
-
-    best_params = None
-    best_validation_loss = numpy.inf
-    best_iter = 0
-    test_score = 0.
-    start_time = time.clock()
-
-    epoch = 0
-    done_looping = False
-
-    while (epoch < n_epochs) and (not done_looping):
-        epoch = epoch + 1
-        for minibatch_index in xrange(n_train_batches):
-
-            minibatch_avg_cost = train_model(minibatch_index)
-            # iteration number
-            iter = (epoch - 1) * n_train_batches + minibatch_index
-
-            if (iter + 1) % validation_frequency == 0:
-                # compute zero-one loss on validation set
-                validation_losses = [validate_model(i) for i
-                                     in xrange(n_valid_batches)]
-                this_validation_loss = numpy.mean(validation_losses)
-
-                print('epoch %i, minibatch %i/%i, validation error %f %%' %
-                     (epoch, minibatch_index + 1, n_train_batches,
-                      this_validation_loss * 100.))
-
-                # if we got the best validation score until now
-                if this_validation_loss < best_validation_loss:
-                    #improve patience if loss improvement is good enough
-                    if this_validation_loss < best_validation_loss *  \
-                           improvement_threshold:
-                        patience = max(patience, iter * patience_increase)
-
-                    best_validation_loss = this_validation_loss
-                    best_iter = iter
-
-                    # test it on the test set
-                    test_losses = [test_model(i) for i
-                                   in xrange(n_test_batches)]
-                    test_score = numpy.mean(test_losses)
-
-                    print(('     epoch %i, minibatch %i/%i, test error of '
-                           'best model %f %%') %
-                          (epoch, minibatch_index + 1, n_train_batches,
-                           test_score * 100.))
-
-            if patience <= iter:
-                    done_looping = True
-                    break
-
-    end_time = time.clock()
-    print(('Optimization complete. Best validation score of %f %% '
-           'obtained at iteration %i, with test performance %f %%') %
-          (best_validation_loss * 100., best_iter + 1, test_score * 100.))
-    print >> sys.stderr, ('The code for file ' +
-                          os.path.split(__file__)[1] +
-                          ' ran for %.2fm' % ((end_time - start_time) / 60.))
+def logsig(x):
+    return 1/(1+math.exp(-float(x)))
 
 
-if __name__ == '__main__':
-    test_mlp()
+def hardlim(x):
+    return 0.5 * (sign(x) + 1)
+
+
+def hardlims(x):
+    return sign(x)
+
+# activtion function and derivative
+def afun(name, x, discrete_flag):
+    if discrete_flag == 0:
+        return {
+        'tansig': lambda y: tansig(y),
+        'logsig': lambda y: logsig(y),
+        'purelin': lambda y: y,
+        'hardlim': lambda y: hardlim(y),
+        'hardlims': lambda y: hardlims(y)
+        }[name](x)
+    else:
+        return {
+        'tansig': lambda y: sign(tansig(y)),
+        'logsig': lambda y: hardlim(x-0.5),
+        'purelin': lambda y: sign(y),
+        'hardlim': lambda y: hardlim(y),
+        'hardlims': lambda y: hardlims(y)
+        }[name](x)
+
+
+def adfun(name, x):
+    return {
+        'tansig': lambda y: 1-math.pow(tansig(y), 2),
+        'logsig': lambda y: logsig(y)*(1-logsig(y)),
+        'purelin': lambda y: 1,
+        'hardlim': 'error no deriv',
+        'hardlims': 'error no deriv'
+    }[name](x)
+
+# to make numpy happy ...
+afun_vec = vectorize(afun)
+adfun_vec = vectorize(adfun)
+
+class MLP:
+    def __init__(self):
+        self.name = 0
+        self.inputs = []
+        self.desired = []
+
+        self.filename = None
+
+        self.batch_flag = 0
+        self.discrete_out_flag = 0
+        self.test_flag = 0
+
+        self.num_iters = 0
+        self.iters_lim = 0
+        self.MSE_lim = 0
+
+        self.curr_sample_ind = 0
+        self.curr_iter = 0
+        self.curr_error = []
+        self.errors = []
+        self.error_count = 0
+        self.error_count_list = []
+        self.MSE_approx = 0
+        self.MSE_approxs = []
+        self.MSEs = []
+
+        self.variable_learning_rate_flag = 0
+        self.num_layers = 0
+        self.num_samples = 0
+        self.sample_len = 0
+        self.neuron_count = []
+        self.learning_rates = []
+        self.weights = []
+        self.weight_range = 0
+        self.new_weights = []
+        self.netvals = []
+        self.activfuncts = []
+        self.activvals = []
+        self.sens = []
+        self.bias = []
+
+# Extract from .csv file in current directory
+    def getData(self, name):
+
+        with open(name, 'rb') as csvfile:
+            csvreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+            for row in csvreader:
+                parsedInput = map(lambda x: float(x), row[:-1])
+                parsedDesired = map(lambda x: float(x), row[-1])
+                self.inputs.append(asmatrix(parsedInput).T)
+                self.desired.append(parsedDesired)
+            self.desired = asmatrix(self.desired)
+
+        self.num_samples = len(self.inputs)
+        self.sample_len = len(self.inputs[1])
+
+# Generate weights and bias for the network.
+    def genWB(self, valrange):
+
+        for i in range(self.num_layers):
+
+            if i == 0:
+                inputs_len = len(self.inputs[i])
+            else:
+                inputs_len = self.neuron_count[i-1]
+
+            W_random_matrix = asmatrix(random_sample((self.neuron_count[i], inputs_len)))
+
+            b_random_matrix = asmatrix(random_sample((self.neuron_count[i], 1)))
+
+            self.weights.append(valrange * (W_random_matrix - valrange / 2))
+
+            self.bias.append(valrange * (b_random_matrix - valrange / 2))
+
+# Updaters
+    def nup(self, curr_layer):
+        input_layer = (curr_layer == 0)
+
+        if input_layer:
+            layer_input = self.inputs[self.curr_sample_ind]
+        else:
+            layer_input = self.activvals[curr_layer-1]
+
+        self.netvals[curr_layer] = (self.weights[curr_layer] * layer_input) + self.bias[curr_layer]
+
+    def aup(self, curr_layer):
+        self.nup(curr_layer)
+
+        curr_afun = self.activfuncts[curr_layer]
+
+        self.activvals[curr_layer] = afun_vec(curr_afun,
+                                self.netvals[curr_layer],
+                                self.discrete_out_flag)
+
+
+    def aups(self):
+        for layer in xrange(self.num_layers):
+            self.aup(layer)
+
+def main():
+
+    mainMLP = MLP()
+
+    mainMLP.num_layers = len(mainMLP.neuron_count)
+
+    mainMLP.iters_lim *= mainMLP.num_samples
+
+    dummy = range(mainMLP.num_layers)
+
+    mainMLP.netvals = list(dummy)
+    mainMLP.activvals = list(dummy)
+    mainMLP.sens = list(dummy)
+
+    mainMLP.new_weights = [list([]) for _ in xrange(mainMLP.num_layers)]
+
+    mainMLP.genWB(mainMLP.weight_range)
+
+if __name__ == "__main__":
+    main()
