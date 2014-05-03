@@ -16,7 +16,7 @@ class InvertedPendulum:
     def systemEquation(self, y):
         theta = y[0]
         omega = y[1]
-        dOmega = 1 / self.LENGTH * \
+        dOmega = 1 / self.LENGTH * \    
             ( \
               -self.GRAVITY * sin(theta) \
               - (self.control / self.MASS) * cos(theta) - 0.01 * omega \

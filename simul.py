@@ -1,11 +1,12 @@
 __author__ = 'teofilo'
 
+
 from math import *
 import pendulum
 import rnn
+import logger
 
 # ip params 
-
 theta = None
 thetaprime = None
 x = None
@@ -17,7 +18,6 @@ thetaprime_tolerance = 0.1
 xprime_tolerance = 0.1
 
 # rnn params
-
 n_in = 4
 n_hidden = 25 
 n_out = 1
@@ -46,18 +46,20 @@ def update_good_enough(ip):
 if __name__ == "__main__":
 	ip = pendulum.InvertedPendulum
 
-	rnn = rnn.MetaRNN(n_in=n_in, n_hidden=n_hidden, n_out=n_out,
+	our_rnn = rnn.MetaRNN(n_in=n_in, n_hidden=n_hidden, n_out=n_out,
                     learning_rate=learning_rate, learning_rate_decay=learning_rate_decay,
-                    n_epochs=n_epochs, acti vation=activation,
+                    n_epochs=n_epochs, activation=activation,
                     output_type='softmax', use_symbolic_softmax=False)
 
     update_good_enough(ip)
 
     while not good_enough:
 
-        controlinput = rnn.fit(X_test=, 
-        					Y_test=, 
-        					validation_frequency=100)
+        our_rnn.fit(X_test=, 
+				Y_test=, 
+				validation_frequency=100)
+
+        controlinput = our_rnn.predict()
         
         ip.update(controlinput)
 
