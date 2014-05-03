@@ -62,31 +62,19 @@ adfun_vec = vectorize(adfun)
 
 class MLP:
     def __init__(self):
-        self.name = 0
         self.inputs = []
         self.desired = []
 
         self.filename = None
 
-        self.batch_flag = 0
         self.discrete_out_flag = 0
-        self.test_flag = 0
 
         self.num_iters = 0
         self.iters_lim = 0
-        self.MSE_lim = 0
 
         self.curr_sample_ind = 0
         self.curr_iter = 0
-        self.curr_error = []
-        self.errors = []
-        self.error_count = 0
-        self.error_count_list = []
-        self.MSE_approx = 0
-        self.MSE_approxs = []
-        self.MSEs = []
 
-        self.variable_learning_rate_flag = 0
         self.num_layers = 0
         self.num_samples = 0
         self.sample_len = 0
@@ -98,7 +86,6 @@ class MLP:
         self.netvals = []
         self.activfuncts = []
         self.activvals = []
-        self.sens = []
         self.bias = []
 
 # Extract from .csv file in current directory
