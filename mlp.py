@@ -2,8 +2,6 @@
 __author__ = 'Teo Asinari'
 __date__ = '2014-02-19'
 
-import csv
-import matplotlib.pyplot as plt
 import numpy
 import math
 from numpy import *
