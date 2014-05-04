@@ -78,7 +78,6 @@ class MLP:
         self.sample_len = 0
         self.learning_rates = []
         self.weights = []
-        self.weight_range = 0
         self.netvals = []
         self.activfuncts = activfuncts
         self.activvals = []
@@ -145,24 +144,3 @@ class MLP:
 
     def mlp_output(self):
         return self.activvals[self.num_layers-1]
-
-def main():
-
-    mainMLP = MLP()
-
-    mainMLP.num_layers = len(mainMLP.neuron_count)
-
-    mainMLP.iters_lim *= mainMLP.num_samples
-
-    dummy = range(mainMLP.num_layers)
-
-    mainMLP.netvals = list(dummy)
-    mainMLP.activvals = list(dummy)
-    mainMLP.sens = list(dummy)
-
-    mainMLP.new_weights = [list([]) for _ in xrange(mainMLP.num_layers)]
-
-    mainMLP.genWB(mainMLP.weight_range)
-
-if __name__ == "__main__":
-    main()
