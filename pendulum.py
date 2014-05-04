@@ -4,7 +4,7 @@ from math import *
 class InvertedPendulum:
     def __init__(self):
         self.time = 0.0
-        self.rotational = array([pi+0.4,0])
+        self.rotational = array([pi+0.6,0])
         self.translational = array([0.0,0.0])
         self.control = 0.0
 

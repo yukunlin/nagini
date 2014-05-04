@@ -7,13 +7,14 @@ from multiprocessing import Pool
 
 random.seed()
 
-ORGANISIMS = 50
-TOP = 11
-RATIO_MUTANTS = 0.1
+ORGANISIMS = 100
+TOP = 15
+RATIO_MUTANTS = 0.15
 NEURON_COUNT = [2, 10, 10, 1]
 FUNCTS = ["tansig", "tansig", "tansig", "purelin"]
-ITERATIONS = 500
+ITERATIONS = 1000
 WEIGHT_RANGE = 5.0
+EPOCH = 100
 
 def breed(mlpA, mlpB):
     weightsA = mlpA.weights
@@ -48,7 +49,6 @@ def crossBreed(L):
             parent2 = L[j]
             mutate = False
             if random.random() < RATIO_MUTANTS:
-                #print ("Mutate")
                 mutate = True
 
             if mutate:
@@ -81,8 +81,7 @@ def testOrganism((mlp, pendulum, steps)):
 
         pendulum.update(mlpControl)
         error = abs(pendulum.rotational[0]-pi) + abs(pendulum.rotational[1])
-        if (x == steps - 1):
-            errs.append(error)
+        errs.append(error)
 
     return [sum(errs), mlp]
 
@@ -94,14 +93,13 @@ def outputControls(mlp, pendulum, steps):
         mlp.aups(mlpInputs)
         mlpControl = mlp.mlp_output()[0,0]
         pendulum.update(mlpControl)
-        print(pendulum.rotational)
-        
-        controls.append(mlpControl)
+        line = [mlpControl] + list(pendulum.rotational)
+        controls.append(line)
 
     return controls
 
 def testPopulation(population, pendulums):
-    p = Pool(8)
+    p = Pool(64)
     args = []
 
     for x in range(ORGANISIMS):
@@ -134,12 +132,11 @@ def generatePendulums():
 if __name__ == "__main__":
     population = populate()
     pendulums = generatePendulums()
-    epoch = 20
     best = None
 
-    for x in range(epoch):
+    for x in range(EPOCH):
         sortedPopulation = testPopulation(population, pendulums)
-        if x == epoch - 1:
+        if x == EPOCH - 1:
             best = sortedPopulation[0]
 
         population = crossBreed(sortedPopulation)
@@ -148,7 +145,6 @@ if __name__ == "__main__":
     newPend = InvertedPendulum()
     bestControls = outputControls(best,newPend,ITERATIONS)
 
-    #print bestControls
 
     log = Logger("controls.csv")
     log.write(bestControls)
