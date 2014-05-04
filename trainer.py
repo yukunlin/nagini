@@ -14,7 +14,8 @@ NEURON_COUNT = [2, 15, 15, 1]
 FUNCTS = ["tansig", "tansig", "tansig", "purelin"]
 ITERATIONS = 1000
 WEIGHT_RANGE = 5.0
-EPOCH = 200
+EPOCH = 2000
+POOLS = 64
 
 def breed(mlpA, mlpB):
     weightsA = mlpA.weights
@@ -27,6 +28,15 @@ def breed(mlpA, mlpB):
 
     newWeights = []
     newBiases = []
+
+    if random.random() < RATIO_MUTANTS:
+        mutant = mutation()
+        weightsA = mutant.weights
+        biasesA = mutant.bias
+    if random.random() < RATIO_MUTANTS:
+        mutant = mutation()
+        weightsB = mutant.weights
+        biasesB = mutant.bias
 
     for i in range(len(weightsA)):
         newWeights.append(proportionA * weightsA[i] + proportionB * weightsB[i])
@@ -47,14 +57,8 @@ def crossBreed(L):
         for j in range(i+1, len(L), 1):
             count += 1
             parent2 = L[j]
-            mutate = False
-            if random.random() < RATIO_MUTANTS:
-                mutate = True
 
-            if mutate:
-                nextGeneration.append(mutation())
-            else:
-                nextGeneration.append(breed(parent1, parent2))
+            nextGeneration.append(breed(parent1, parent2))
 
             if count == ORGANISIMS:
                 return nextGeneration
@@ -63,7 +67,6 @@ def crossBreed(L):
 
 def sortByFitness(Lpair):
     return sorted(Lpair, cmp = lambda x, y : 1 if x[0] > y[0] else -1)
-
 
 def mutation():
     mutant = MLP(2,NEURON_COUNT, FUNCTS)
@@ -99,15 +102,16 @@ def outputControls(mlp, pendulum, steps):
     return controls
 
 def testPopulation(population, pendulums):
-    p = Pool(64)
+    p = Pool(POOLS)
     args = []
+    initialRotation = pendulums[0].rotational
 
     for x in range(ORGANISIMS):
         args.append((population[x], pendulums[x], ITERATIONS))
     Lpairs = p.map(testOrganism, args)
 
     sortedPairs = sortByFitness(Lpairs)
-    print map(lambda x : x[0], sortedPairs )[0]
+    print("initial [theta, omega]: " + str(list(initialRotation)) + ", sum abs(error): " + str(sortedPairs[0][0]))
 
     p.close()
     return map(lambda x : x[1], sortedPairs )
@@ -134,8 +138,8 @@ if __name__ == "__main__":
     best = None
 
     for x in range(EPOCH):
-        print(pi + 0.1*x % 1.2 - .6)
-        pendulums = generatePendulums(array([pi + 0.1*x % 1.2 - .6, 0]))
+        initialPositions = array([pi + 0.05 * x % 1.45 - 0.70, 0])
+        pendulums = generatePendulums(initialPositions)
         sortedPopulation = testPopulation(population, pendulums)
         if x == EPOCH - 1:
             best = sortedPopulation[0]
@@ -145,7 +149,8 @@ if __name__ == "__main__":
     newPend = InvertedPendulum()
     bestControls = outputControls(best,newPend,ITERATIONS)
 
-
     log = Logger("controls.csv")
     log.write(bestControls)
     log.close()
+
+    print(best.weights)
