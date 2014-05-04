@@ -121,17 +121,17 @@ def populate():
 
     return organisms
 
-def generatePendulums():
+def generatePendulums(rotational):
     pendulums = []
     for x in range(ORGANISIMS):
-        pendulums.append(InvertedPendulum())
+        pendulums.append(InvertedPendulum(rotational))
 
     return pendulums
 
 
 if __name__ == "__main__":
     population = populate()
-    pendulums = generatePendulums()
+    pendulums = generatePendulums(array([pi, 0]))
     best = None
 
     for x in range(EPOCH):
@@ -140,7 +140,7 @@ if __name__ == "__main__":
             best = sortedPopulation[0]
 
         population = crossBreed(sortedPopulation)
-        pendulums = generatePendulums()
+        pendulums = generatePendulums(array([pi + 0.1*x % 0.6, 0]))
 
     newPend = InvertedPendulum()
     bestControls = outputControls(best,newPend,ITERATIONS)

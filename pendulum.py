@@ -2,10 +2,10 @@ from numpy import array
 from math import *
 
 class InvertedPendulum:
-    def __init__(self):
+    def __init__(self, rotational=array([pi, 0])):
         self.time = 0.0
-        self.rotational = array([pi+0.6,0])
-        self.translational = array([0.0,0.0])
+        self.rotational = rotational
+        self.translational = array([0.0, 0.0])
         self.control = 0.0
 
         self.LENGTH = 0.5
