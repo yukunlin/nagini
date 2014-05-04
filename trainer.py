@@ -2,14 +2,17 @@ import random
 from mlp import *
 from pendulum import *
 from numpy import *
+from multiprocessing import Pool
 
 random.seed()
 
 ORGANISIMS = 50
+TOP = 11
 RATIO_MUTANTS = 0.1
 NEURON_COUNT = [2, 10, 10, 1]
 FUNCTS = ["tansig", "tansig", "tansig", "purelin"]
-ITERATIONS = 5
+ITERATIONS = 200
+WEIGHT_RANGE = 5.0
 
 def breed(mlpA, mlpB):
     weightsA = mlpA.weights
@@ -27,7 +30,7 @@ def breed(mlpA, mlpB):
         newWeights.append(proportionA * weightsA[i] + proportionB * weightsB[i])
         newBiases.append(proportionA * biasesA[i] + proportionB * biasesB[i])
 
-    child = MLP(NEURON_COUNT, FUNCTS)
+    child = MLP(2, NEURON_COUNT, FUNCTS)
     child.weights = newWeights
     child.bias = newBiases
 
@@ -37,13 +40,14 @@ def crossBreed(L):
     nextGeneration = []
     count = 0
 
-    for i in range(len(L)):
+    for i in range(TOP):
         parent1 = L[i]
         for j in range(i+1, len(L), 1):
             count += 1
             parent2 = L[j]
             mutate = False
             if random.random() < RATIO_MUTANTS:
+                #print ("Mutate")
                 mutate = True
 
             if mutate:
@@ -62,40 +66,46 @@ def sortByFitness(Lpair):
 
 def mutation():
     mutant = MLP(2,NEURON_COUNT, FUNCTS)
-    mutant.genWB(20.0)
+    mutant.genWB(WEIGHT_RANGE)
     return mutant
 
-def testOrganism(mlp, pendulum, steps):
+def testOrganism((mlp, pendulum, steps)):
     errs =[]
 
     for x in range(steps):
         mlpInputs = list(pendulum.rotational)
         mlpInputs = array(map(lambda x: [x], mlpInputs))
-        print(mlpInputs)
+      #  print(mlpInputs)
         mlp.aups(mlpInputs)
         mlpControl = mlp.mlp_output()[0,0]
 
         pendulum.update(mlpControl)
-        error = abs(pendulum.rotational[0]) + abs(pendulum.rotational[1])
-        errs.append(error)
+        error = abs(pendulum.rotational[0]-pi) + abs(pendulum.rotational[1])
+        if (x == steps - 1):
+            errs.append(error)
+       #     print(pendulum.rotational)
 
     return [sum(errs), mlp]
 
 def testPopulation(population, pendulums):
-    Lpairs = []
+    p = Pool(8)
+    args = []
+
     for x in range(ORGANISIMS):
-        Lpairs.append(testOrganism(population[x],pendulums[x],100))
+        args.append((population[x], pendulums[x], ITERATIONS))
+    Lpairs = p.map(testOrganism, args)
 
     sortedPairs = sortByFitness(Lpairs)
-    print map(lambda x : x[0], sortedPairs )
+    print map(lambda x : x[0], sortedPairs )[0]
 
+    p.close()
     return map(lambda x : x[1], sortedPairs )
 
 def populate():
     organisms = []
     for x in range(ORGANISIMS):
         org = MLP(2, NEURON_COUNT, FUNCTS)
-        org.genWB(20)
+        org.genWB(WEIGHT_RANGE)
         organisms.append(org)
 
     return organisms
@@ -116,6 +126,6 @@ if __name__ == "__main__":
     for x in range(ITERATIONS):
         sortedPopulation = testPopulation(population, pendulums)
         population = crossBreed(sortedPopulation)
-        print(len(population))
+        ##print(len(population))
         pendulums = generatePendulums()
 
