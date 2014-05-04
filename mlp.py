@@ -4,7 +4,6 @@ __date__ = '2014-02-19'
 
 import numpy
 import math
-from copy import deepcopy
 from numpy import *
 from numpy.random import *
 from numpy.matrixlib import *
@@ -74,29 +73,12 @@ class MLP:
 
         self.neuron_count = neuron_count
         self.num_layers = len(neuron_count)
-        self.num_samples = 0
-        self.sample_len = 0
-        self.learning_rates = []
+        self.learning_rate = 0
         self.weights = []
         self.netvals = []
         self.activfuncts = activfuncts
         self.activvals = []
         self.bias = []
-
-# Extract from .csv file in current directory
-    def getData(self, name):
-
-        with open(name, 'rb') as csvfile:
-            csvreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-            for row in csvreader:
-                parsedInput = map(lambda x: float(x), row[:-1])
-                parsedDesired = map(lambda x: float(x), row[-1])
-                self.inputs.append(asmatrix(parsedInput).T)
-                self.desired.append(parsedDesired)
-            self.desired = asmatrix(self.desired)
-
-        self.num_samples = len(self.inputs)
-        self.sample_len = len(self.inputs[1])
 
 # Generate weights and bias for the network.
     def genWB(self, valrange):
