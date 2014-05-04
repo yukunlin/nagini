@@ -59,8 +59,9 @@ afun_vec = vectorize(afun)
 adfun_vec = vectorize(adfun)
 
 class MLP:
-    def __init__(self, neuron_count, activfuncts):
-        self.inputs = []
+    def __init__(self, input_size=0, neuron_count=0, activfuncts=[]):
+        self.input = []
+        self.input_size = input_size
         self.desired = []
 
         self.discrete_out_flag = 0
@@ -73,11 +74,14 @@ class MLP:
 
         self.neuron_count = neuron_count
         self.num_layers = len(neuron_count)
+
+        dummy = range(self.num_layers)
+
         self.learning_rate = 0
         self.weights = []
-        self.netvals = []
+        self.netvals = list(dummy)
+        self.activvals = list(dummy)
         self.activfuncts = activfuncts
-        self.activvals = []
         self.bias = []
 
 # Generate weights and bias for the network.
@@ -86,7 +90,7 @@ class MLP:
         for i in range(self.num_layers):
 
             if i == 0:
-                inputs_len = len(self.inputs[i])
+                inputs_len = self.input_size
             else:
                 inputs_len = self.neuron_count[i-1]
 
@@ -103,26 +107,34 @@ class MLP:
         input_layer = (curr_layer == 0)
 
         if input_layer:
-            layer_input = self.inputs
+            layer_input = self.input
         else:
             layer_input = self.activvals[curr_layer-1]
 
-        self.netvals[curr_layer] = (self.weights[curr_layer] * layer_input) + self.bias[curr_layer]
+        self.netvals[curr_layer] = ((self.weights[curr_layer] * layer_input) + self.bias[curr_layer])
 
     def aup(self, curr_layer):
         self.nup(curr_layer)
 
         curr_afun = self.activfuncts[curr_layer]
 
-        self.activvals[curr_layer] = afun_vec(curr_afun,
+        self.activvals[curr_layer] = (afun_vec(curr_afun,
                                 self.netvals[curr_layer],
-                                self.discrete_out_flag)
+                                self.discrete_out_flag))
 
-
-    def aups(self, inputs):
-        self.inputs = inputs
+    def aups(self, input):
+        self.input = input
         for layer in xrange(self.num_layers):
             self.aup(layer)
 
     def mlp_output(self):
         return self.activvals[self.num_layers-1]
+
+def main():
+    a = MLP(input_size=3, neuron_count=[3, 2], activfuncts=['tansig', 'tansig'])
+    a.genWB(0.5)
+    a.aups(array([[1], [2], [3]]))
+    print a.mlp_output()
+
+if __name__ == "__main__":
+    main()
