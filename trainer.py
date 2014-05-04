@@ -1,4 +1,5 @@
 import random
+from logger import *
 from mlp import *
 from pendulum import *
 from numpy import *
@@ -11,7 +12,7 @@ TOP = 11
 RATIO_MUTANTS = 0.1
 NEURON_COUNT = [2, 10, 10, 1]
 FUNCTS = ["tansig", "tansig", "tansig", "purelin"]
-ITERATIONS = 200
+ITERATIONS = 500
 WEIGHT_RANGE = 5.0
 
 def breed(mlpA, mlpB):
@@ -75,7 +76,6 @@ def testOrganism((mlp, pendulum, steps)):
     for x in range(steps):
         mlpInputs = list(pendulum.rotational)
         mlpInputs = array(map(lambda x: [x], mlpInputs))
-      #  print(mlpInputs)
         mlp.aups(mlpInputs)
         mlpControl = mlp.mlp_output()[0,0]
 
@@ -83,9 +83,22 @@ def testOrganism((mlp, pendulum, steps)):
         error = abs(pendulum.rotational[0]-pi) + abs(pendulum.rotational[1])
         if (x == steps - 1):
             errs.append(error)
-       #     print(pendulum.rotational)
 
     return [sum(errs), mlp]
+
+def outputControls(mlp, pendulum, steps):
+    controls = []
+    for x in range(steps):
+        mlpInputs = list(pendulum.rotational)
+        mlpInputs = array(map(lambda x: [x], mlpInputs))
+        mlp.aups(mlpInputs)
+        mlpControl = mlp.mlp_output()[0,0]
+        pendulum.update(mlpControl)
+        print(pendulum.rotational)
+        
+        controls.append(mlpControl)
+
+    return controls
 
 def testPopulation(population, pendulums):
     p = Pool(8)
@@ -121,11 +134,22 @@ def generatePendulums():
 if __name__ == "__main__":
     population = populate()
     pendulums = generatePendulums()
- #   print(testPopulation(population,pendulums))
+    epoch = 20
+    best = None
 
-    for x in range(ITERATIONS):
+    for x in range(epoch):
         sortedPopulation = testPopulation(population, pendulums)
+        if x == epoch - 1:
+            best = sortedPopulation[0]
+
         population = crossBreed(sortedPopulation)
-        ##print(len(population))
         pendulums = generatePendulums()
 
+    newPend = InvertedPendulum()
+    bestControls = outputControls(best,newPend,ITERATIONS)
+
+    #print bestControls
+
+    log = Logger("controls.csv")
+    log.write(bestControls)
+    log.close()

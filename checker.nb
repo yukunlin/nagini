@@ -1,0 +1,208 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      6715,        199]
+NotebookOptionsPosition[      6183,        178]
+NotebookOutlinePosition[      6569,        195]
+CellTagsIndexPosition[      6526,        192]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"controls", "=", 
+   RowBox[{
+    RowBox[{"Import", "[", 
+     RowBox[{
+      RowBox[{"NotebookDirectory", "[", "]"}], "<>", "\"\<controls.csv\>\""}],
+      "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.608170665652156*^9, 3.608170692090992*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"RungeKutta", "[", 
+    RowBox[{"y_", ",", "f_", ",", "t_", ",", "dt_"}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"k1", ",", "k2", ",", "k3", ",", "k4"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"k1", "=", 
+       RowBox[{"f", "[", 
+        RowBox[{"t", ",", "y"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"k2", "=", 
+       RowBox[{"f", "[", 
+        RowBox[{
+         RowBox[{"t", "+", 
+          FractionBox["dt", "2"]}], ",", 
+         RowBox[{"y", "+", 
+          RowBox[{
+           FractionBox["dt", "2"], "k1"}]}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"k3", "=", 
+       RowBox[{"f", "[", 
+        RowBox[{
+         RowBox[{"t", "+", 
+          FractionBox["dt", "2"]}], ",", 
+         RowBox[{"y", "+", 
+          RowBox[{
+           FractionBox["dt", "2"], "k2"}]}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"k4", "=", 
+       RowBox[{"f", "[", 
+        RowBox[{
+         RowBox[{"t", "+", "dt"}], ",", 
+         RowBox[{"y", "+", 
+          RowBox[{"dt", " ", "k3"}]}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      
+      RowBox[{"y", "+", 
+       RowBox[{
+        FractionBox["dt", "6"], 
+        RowBox[{"(", 
+         RowBox[{"k1", "+", 
+          RowBox[{"2", "k2"}], "+", 
+          RowBox[{"2", "k3"}], "+", "k4"}], ")"}]}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.},
+ CellChangeTimes->{{3.590425883858871*^9, 3.590425924334599*^9}, {
+   3.590426032732622*^9, 3.590426118764719*^9}, {3.590426394631521*^9, 
+   3.590426595276307*^9}, {3.5904593321204157`*^9, 3.590459333405748*^9}, {
+   3.591680966506694*^9, 3.591681005828768*^9}, {3.591681080414009*^9, 
+   3.5916811067082376`*^9}, {3.591681840018114*^9, 3.591681890481966*^9}, 
+   3.5926449322125893`*^9, {3.6081706624414787`*^9, 3.608170664452215*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"f", "[", 
+   RowBox[{"t_", ",", "y_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"\[Theta]", ",", "\[Omega]"}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"\[Theta]", "=", 
+      RowBox[{"y", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"\[Omega]", "=", 
+      RowBox[{"y", "[", 
+       RowBox[{"[", "2", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\[Omega]", ",", 
+       RowBox[{
+        FractionBox["1", "L"], 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"-", "g"}], " ", 
+           RowBox[{"Sin", "[", "\[Theta]", "]"}]}], "-", 
+          RowBox[{
+           FractionBox["c", "msys"], " ", 
+           RowBox[{"Cos", "[", "\[Theta]", "]"}]}], "-", 
+          RowBox[{".01", "\[Omega]"}]}], ")"}]}]}], "}"}]}]}], 
+   "]"}]}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ycurrent", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"\[Pi]", "+", "0.4"}], ",", "0"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"log", "=", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"timeStep", "=", "0.01"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"time", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"L", "=", ".5"}], ";", "    ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"Length", " ", "of", " ", "pendulum"}], ",", " ", 
+    RowBox[{"in", " ", "meters"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"g", " ", "=", " ", "9.81"}], ";", "  ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"Gravitational", " ", "constant"}], ",", " ", 
+    RowBox[{"in", " ", 
+     RowBox[{
+      RowBox[{"meters", "/", "sec"}], "/", "sec"}]}]}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"msys", "=", "0.4"}], ";"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.608170468726449*^9, 3.608170623663673*^9}, {
+   3.6081707699903727`*^9, 3.608170860652895*^9}, {3.6081709463899717`*^9, 
+   3.608170960723558*^9}, 3.608171032294548*^9, {3.6081713103397217`*^9, 
+   3.608171312209887*^9}}],
+
+Cell[BoxData[
+ RowBox[{"For", "[", 
+  RowBox[{
+   RowBox[{"i", "=", "1"}], ",", 
+   RowBox[{"i", "\[LessEqual]", 
+    RowBox[{"Length", "[", "controls", "]"}]}], ",", 
+   RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"c", "=", 
+     RowBox[{"controls", "[", 
+      RowBox[{"[", "i", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"yold", "=", "ycurrent"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"ycurrent", "=", 
+     RowBox[{"RungeKutta", "[", 
+      RowBox[{"yold", ",", "f", ",", "time", ",", "timeStep"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"AppendTo", "[", 
+     RowBox[{"log", ",", "ycurrent"}], "]"}], ";"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.608170468726449*^9, 3.608170623663673*^9}, {
+   3.6081707699903727`*^9, 3.608170860652895*^9}, {3.6081709463899717`*^9, 
+   3.608170960723558*^9}, 3.608171032294548*^9, {3.608171096625414*^9, 
+   3.60817112166645*^9}, {3.6081713158879557`*^9, 3.608171316262477*^9}}],
+
+Cell[BoxData["log"], "Input",
+ CellChangeTimes->{{3.6081713228648977`*^9, 3.60817132309628*^9}}]
+},
+WindowSize->{960, 1085},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+Magnification:>1.25 Inherited,
+FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
+2013)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 324, 9, 36, "Input"],
+Cell[884, 31, 1999, 54, 288, "Input",
+ CellGroupingRules->{GroupTogetherGrouping, 10000.}],
+Cell[2886, 87, 948, 28, 140, "Input"],
+Cell[3837, 117, 1230, 32, 183, "Input"],
+Cell[5070, 151, 1010, 22, 141, "Input"],
+Cell[6083, 175, 96, 1, 36, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)
