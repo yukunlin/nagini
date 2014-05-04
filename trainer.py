@@ -14,7 +14,7 @@ NEURON_COUNT = [2, 15, 15, 1]
 FUNCTS = ["tansig", "tansig", "tansig", "purelin"]
 ITERATIONS = 1000
 WEIGHT_RANGE = 5.0
-EPOCH = 2000
+EPOCH = 10000
 POOLS = 64
 
 def breed(mlpA, mlpB):
@@ -111,7 +111,7 @@ def testPopulation(population, pendulums):
     Lpairs = p.map(testOrganism, args)
 
     sortedPairs = sortByFitness(Lpairs)
-    print("initial [theta, omega]: " + str(list(initialRotation)) + ", sum abs(error): " + str(sortedPairs[0][0]))
+    print("initial [theta, omega]: " + str(map(lambda x : "{:.4f}".format(x), list(initialRotation))) + ", sum abs(error): " + str(sortedPairs[0][0]))
 
     p.close()
     return map(lambda x : x[1], sortedPairs )
@@ -138,7 +138,7 @@ if __name__ == "__main__":
     best = None
 
     for x in range(EPOCH):
-        initialPositions = array([pi + 0.05 * x % 1.45 - 0.70, 0])
+        initialPositions = array([pi + random.uniform(-0.7,0.7), random.uniform(-0.7,0.7)])
         pendulums = generatePendulums(initialPositions)
         sortedPopulation = testPopulation(population, pendulums)
         if x == EPOCH - 1:
