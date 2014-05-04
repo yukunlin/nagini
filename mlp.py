@@ -143,6 +143,9 @@ class MLP:
         for layer in xrange(self.num_layers):
             self.aup(layer)
 
+    def mlp_output(self):
+        return self.activvals[self.num_layers-1]
+
 def main():
 
     mainMLP = MLP()
