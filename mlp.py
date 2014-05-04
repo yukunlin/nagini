@@ -98,9 +98,9 @@ class MLP:
 
             b_random_matrix = asmatrix(random_sample((self.neuron_count[i], 1)))
 
-            self.weights.append(valrange * (W_random_matrix - valrange / 2))
+            self.weights.append((2 * valrange * W_random_matrix) - valrange)
 
-            self.bias.append(valrange * (b_random_matrix - valrange / 2))
+            self.bias.append((2 * valrange * b_random_matrix) - valrange)
 
 # Updaters
     def nup(self, curr_layer):
@@ -132,9 +132,9 @@ class MLP:
 
 def main():
     a = MLP(input_size=3, neuron_count=[3, 2], activfuncts=['tansig', 'tansig'])
-    a.genWB(0.5)
-    a.aups(array([[1], [2], [3]]))
-    print a.mlp_output()
+    a.genWB(2000)
+    # a.aups(array([[1], [2], [3]]))
+    print a.weights
 
 if __name__ == "__main__":
     main()
