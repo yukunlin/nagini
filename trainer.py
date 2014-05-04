@@ -10,11 +10,11 @@ random.seed()
 ORGANISIMS = 100
 TOP = 15
 RATIO_MUTANTS = 0.15
-NEURON_COUNT = [2, 10, 10, 1]
+NEURON_COUNT = [2, 15, 15, 1]
 FUNCTS = ["tansig", "tansig", "tansig", "purelin"]
 ITERATIONS = 1000
 WEIGHT_RANGE = 5.0
-EPOCH = 100
+EPOCH = 200
 
 def breed(mlpA, mlpB):
     weightsA = mlpA.weights
@@ -131,16 +131,16 @@ def generatePendulums(rotational):
 
 if __name__ == "__main__":
     population = populate()
-    pendulums = generatePendulums(array([pi, 0]))
     best = None
 
     for x in range(EPOCH):
+        print(pi + 0.1*x % 1.2 - .6)
+        pendulums = generatePendulums(array([pi + 0.1*x % 1.2 - .6, 0]))
         sortedPopulation = testPopulation(population, pendulums)
         if x == EPOCH - 1:
             best = sortedPopulation[0]
 
         population = crossBreed(sortedPopulation)
-        pendulums = generatePendulums(array([pi + 0.1*x % 0.6, 0]))
 
     newPend = InvertedPendulum()
     bestControls = outputControls(best,newPend,ITERATIONS)
