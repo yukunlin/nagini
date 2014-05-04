@@ -4,6 +4,7 @@ __date__ = '2014-02-19'
 
 import numpy
 import math
+from copy import deepcopy
 from numpy import *
 from numpy.random import *
 from numpy.matrixlib import *
@@ -60,10 +61,8 @@ adfun_vec = vectorize(adfun)
 
 class MLP:
     def __init__(self):
-        self.inputs = []
+        self.input = []
         self.desired = []
-
-        self.filename = None
 
         self.discrete_out_flag = 0
 
@@ -80,9 +79,32 @@ class MLP:
         self.learning_rates = []
         self.weights = []
         self.weight_range = 0
-        self.new_weights = []
         self.netvals = []
         self.activfuncts = []
+        self.activvals = []
+        self.bias = []
+
+    def construct_mlp(neuron_count, activfuncts):
+        self.inputs = []
+        self.desired = []
+
+        self.discrete_out_flag = 0
+
+        self.num_iters = 0
+        self.iters_lim = 0
+
+        self.curr_sample_ind = 0
+        self.curr_iter = 0
+
+        self.neuron_count = neuron_count
+        self.num_layers = len(neuron_count)
+        self.num_samples = 0
+        self.sample_len = 0
+        self.learning_rates = []
+        self.weights = []
+        self.weight_range = 0
+        self.netvals = []
+        self.activfuncts = activfuncts
         self.activvals = []
         self.bias = []
 
@@ -124,7 +146,7 @@ class MLP:
         input_layer = (curr_layer == 0)
 
         if input_layer:
-            layer_input = self.inputs[self.curr_sample_ind]
+            layer_input = self.input
         else:
             layer_input = self.activvals[curr_layer-1]
 
@@ -140,7 +162,8 @@ class MLP:
                                 self.discrete_out_flag)
 
 
-    def aups(self):
+    def aups(self, input):
+        self.input = input
         for layer in xrange(self.num_layers):
             self.aup(layer)
 
