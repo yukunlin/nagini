@@ -60,31 +60,7 @@ afun_vec = vectorize(afun)
 adfun_vec = vectorize(adfun)
 
 class MLP:
-    def __init__(self):
-        self.input = []
-        self.desired = []
-
-        self.discrete_out_flag = 0
-
-        self.num_iters = 0
-        self.iters_lim = 0
-
-        self.curr_sample_ind = 0
-        self.curr_iter = 0
-
-        self.num_layers = 0
-        self.num_samples = 0
-        self.sample_len = 0
-        self.neuron_count = []
-        self.learning_rates = []
-        self.weights = []
-        self.weight_range = 0
-        self.netvals = []
-        self.activfuncts = []
-        self.activvals = []
-        self.bias = []
-
-    def construct_mlp(neuron_count, activfuncts):
+    def __init__(self, neuron_count, activfuncts):
         self.inputs = []
         self.desired = []
 
@@ -146,7 +122,7 @@ class MLP:
         input_layer = (curr_layer == 0)
 
         if input_layer:
-            layer_input = self.input
+            layer_input = self.inputs
         else:
             layer_input = self.activvals[curr_layer-1]
 
@@ -162,8 +138,8 @@ class MLP:
                                 self.discrete_out_flag)
 
 
-    def aups(self, input):
-        self.input = input
+    def aups(self, inputs):
+        self.inputs = inputs
         for layer in xrange(self.num_layers):
             self.aup(layer)
 
