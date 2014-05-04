@@ -8,7 +8,8 @@ random.seed()
 ORGANISIMS = 50
 RATIO_MUTANTS = 0.1
 NEURON_COUNT = [2, 10, 10, 1]
-FUNCTS = ["logsig", "logsig", "logsig", "purelin"]
+FUNCTS = ["tansig", "tansig", "tansig", "purelin"]
+ITERATIONS = 5
 
 def breed(mlpA, mlpB):
     weightsA = mlpA.weights
@@ -42,7 +43,6 @@ def crossBreed(L):
             count += 1
             parent2 = L[j]
             mutate = False
-
             if random.random() < RATIO_MUTANTS:
                 mutate = True
 
@@ -52,34 +52,70 @@ def crossBreed(L):
                 nextGeneration.append(breed(parent1, parent2))
 
             if count == ORGANISIMS:
-                break
+                return nextGeneration
 
     return nextGeneration
 
 def sortByFitness(Lpair):
-    return reverse(sort(Lpair))
+    return sorted(Lpair, cmp = lambda x, y : 1 if x[0] > y[0] else -1)
+
 
 def mutation():
     mutant = MLP(2,NEURON_COUNT, FUNCTS)
     mutant.genWB(20.0)
     return mutant
 
-def testNetwork(mlp, pendulum, steps):
+def testOrganism(mlp, pendulum, steps):
     errs =[]
 
     for x in range(steps):
-        mlpInputs = asmatrix(pendulum.rotational)
+        mlpInputs = list(pendulum.rotational)
+        mlpInputs = array(map(lambda x: [x], mlpInputs))
+        print(mlpInputs)
         mlp.aups(mlpInputs)
         mlpControl = mlp.mlp_output()[0,0]
 
         pendulum.update(mlpControl)
         error = abs(pendulum.rotational[0]) + abs(pendulum.rotational[1])
-        err.append(error)
+        errs.append(error)
 
-    return sum(errs)
+    return [sum(errs), mlp]
+
+def testPopulation(population, pendulums):
+    Lpairs = []
+    for x in range(ORGANISIMS):
+        Lpairs.append(testOrganism(population[x],pendulums[x],100))
+
+    sortedPairs = sortByFitness(Lpairs)
+    print map(lambda x : x[0], sortedPairs )
+
+    return map(lambda x : x[1], sortedPairs )
 
 def populate():
     organisms = []
     for x in range(ORGANISIMS):
         org = MLP(2, NEURON_COUNT, FUNCTS)
+        org.genWB(20)
         organisms.append(org)
+
+    return organisms
+
+def generatePendulums():
+    pendulums = []
+    for x in range(ORGANISIMS):
+        pendulums.append(InvertedPendulum())
+
+    return pendulums
+
+
+if __name__ == "__main__":
+    population = populate()
+    pendulums = generatePendulums()
+ #   print(testPopulation(population,pendulums))
+
+    for x in range(ITERATIONS):
+        sortedPopulation = testPopulation(population, pendulums)
+        population = crossBreed(sortedPopulation)
+        print(len(population))
+        pendulums = generatePendulums()
+
