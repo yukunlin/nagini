@@ -60,3 +60,6 @@ coverage.xml
 docs/_build/
 
 *.csv
+biases.txt
+weights.txt
+out

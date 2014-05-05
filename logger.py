@@ -10,5 +10,8 @@ class Logger:
 
             self.file.write(strToWrite[:-2]+ '\n')
 
+    def writeStr(self, line):
+        self.file.write(str(line) + '\n')
+
     def close(self):
         self.file.close()
