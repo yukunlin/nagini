@@ -14,7 +14,7 @@ TOP = 15
 RATIO_MUTANTS = 0.1
 NEURON_COUNT = [4, 10, 10, 10, 1]
 FUNCTS = ["purelin", "purelin", "purelin", "purelin", "purelin"]
-ITERATIONS = 500
+ITERATIONS = 1000
 WEIGHT_RANGE = 4.0
 EPOCH = 350
 POOLS = 64
@@ -92,7 +92,7 @@ def testOrganism((mlp, pendulum, steps)):
         if abs(pendulum.rotational[0] - pi) > pi/2.0:
             rotationError = 1e9
 
-        if abs(pendulum.translational[0] > 1.3):
+        if abs(pendulum.translational[0]) > 1.3:
             translationalError =  1e4
 
         error = rotationError + translationalError
