@@ -1,6 +1,12 @@
 import random
+<<<<<<< Updated upstream
 import sys
 
+=======
+import getopt
+import sys
+import argparse
+>>>>>>> Stashed changes
 from logger import *
 from mlp import *
 from pendulum import *
@@ -9,7 +15,7 @@ from multiprocessing import Pool
 
 random.seed()
 
-ORGANISIMS = 100
+ORGANISMS = 100
 TOP = 15
 RATIO_MUTANTS = 0.25
 NEURON_COUNT = [2, 10, 10, 10, 10, 1]
@@ -63,7 +69,7 @@ def crossBreed(L):
 
             nextGeneration.append(breed(parent1, parent2))
 
-            if count == ORGANISIMS:
+            if count == ORGANISMS:
                 return nextGeneration
 
     return nextGeneration
@@ -119,7 +125,7 @@ def testPopulation(population, pendulums):
     args = []
     initialRotation = pendulums[0].rotational
 
-    for x in range(ORGANISIMS):
+    for x in range(ORGANISMS):
         args.append((population[x], pendulums[x], ITERATIONS))
     Lpairs = p.map(testOrganism, args)
 
@@ -134,8 +140,13 @@ def testPopulation(population, pendulums):
 
 def populate():
     organisms = []
+<<<<<<< Updated upstream
     for x in range(ORGANISIMS):
         org = MLP(NUM_INPUTS, NEURON_COUNT, FUNCTS)
+=======
+    for x in range(ORGANISMS):
+        org = MLP(2, NEURON_COUNT, FUNCTS)
+>>>>>>> Stashed changes
         org.genWB(WEIGHT_RANGE)
         organisms.append(org)
 
@@ -143,11 +154,15 @@ def populate():
 
 def generatePendulums(rotational, translational):
     pendulums = []
+<<<<<<< Updated upstream
     for x in range(ORGANISIMS):
         pendulums.append(InvertedPendulum(rotational, translational))
+=======
+    for x in range(ORGANISMS):
+        pendulums.append(InvertedPendulum(rotational))
+>>>>>>> Stashed changes
 
     return pendulums
-
 
 if __name__ == "__main__":
     population = populate()
@@ -173,6 +188,7 @@ if __name__ == "__main__":
 
     log = Logger("controls.csv")
     log.write(bestControls)
+<<<<<<< Updated upstream
     log.close()
 
     weightsFile = open("weights.txt", 'w')
@@ -194,3 +210,6 @@ if __name__ == "__main__":
         biasesFile.write(mlist + '\n')
 
     biasesFile.close()
+=======
+    log.close()
+>>>>>>> Stashed changes
