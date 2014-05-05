@@ -11,12 +11,12 @@ random.seed()
 
 ORGANISIMS = 100
 TOP = 15
-RATIO_MUTANTS = 0.1
+RATIO_MUTANTS = 0.15
 NEURON_COUNT = [4, 10, 10, 10, 1]
 FUNCTS = ["purelin", "purelin", "purelin", "purelin", "purelin"]
 ITERATIONS = 1000
 WEIGHT_RANGE = 4.0
-EPOCH = 350
+EPOCH = 500
 POOLS = 64
 NUM_INPUTS = 4
 
@@ -172,7 +172,7 @@ if __name__ == "__main__":
     for x in range(EPOCH):
 
 
-        thetaChoices = [random.uniform(-0.7,-0.5), random.uniform(0.5, 0.7)]
+        thetaChoices = [random.uniform(-0.7,-0.4), random.uniform(0.4, 0.7)]
 
         initialRotationLeft = array([pi + thetaChoices[0], random.uniform(-0.1,0.1)])
         initialRotationRight = array([pi + thetaChoices[1], random.uniform(-0.1,0.1)])
