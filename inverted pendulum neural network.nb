@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     49440,       1086]
-NotebookOptionsPosition[     48804,       1062]
-NotebookOutlinePosition[     49191,       1079]
-CellTagsIndexPosition[     49148,       1076]
+NotebookDataLength[     49719,       1093]
+NotebookOptionsPosition[     49137,       1071]
+NotebookOutlinePosition[     49524,       1088]
+CellTagsIndexPosition[     49481,       1085]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -111,7 +111,6 @@ Cell[BoxData[{
     RowBox[{"{", 
      RowBox[{"n", ",", 
       RowBox[{"f", "[", "n", "]"}]}], "}"}]}], "]"}]}]}], "Input",
- InitializationCell->True,
  CellChangeTimes->{{3.6017472630706177`*^9, 3.6017473807171593`*^9}, {
    3.601747412674405*^9, 3.601747420708044*^9}, {3.601747514221648*^9, 
    3.601747538880475*^9}, {3.601747931152205*^9, 3.6017480036075697`*^9}, 
@@ -190,7 +189,6 @@ Cell[BoxData[{
          RowBox[{"{", "3", "}"}]}], "]"}], ",", "\[IndentingNewLine]", "True",
         ",", "aList"}], "\[IndentingNewLine]", "]"}]}]}], 
    "\[IndentingNewLine]", "]"}]}]}], "Input",
- InitializationCell->True,
  CellChangeTimes->{{3.6017718670184317`*^9, 3.601771947966339*^9}, {
    3.6017720000460987`*^9, 3.6017720498873367`*^9}, {3.601772087743078*^9, 
    3.601772145190989*^9}, {3.6017721827945642`*^9, 3.6017722325390472`*^9}, {
@@ -235,11 +233,13 @@ Cell[BoxData[{
   RowBox[{"functions", "=", 
    RowBox[{"{", 
     RowBox[{
-    "Tanh", ",", "Tanh", ",", "Tanh", ",", "Tanh", ",", "Tanh", ",", 
-     "Linear"}], "}"}]}], ";"}]}], "Input",
+    "Linear", ",", "Linear", ",", "Linear", ",", "Linear", ",", "Linear"}], 
+    "}"}]}], ";"}]}], "Input",
  CellChangeTimes->{{3.608221026885633*^9, 3.608221121404725*^9}, {
   3.608221154195578*^9, 3.608221158420898*^9}, {3.608236646265503*^9, 
-  3.6082366487320347`*^9}, {3.608242912465496*^9, 3.608242918575934*^9}}],
+  3.6082366487320347`*^9}, {3.608242912465496*^9, 3.608242918575934*^9}, {
+  3.608270561209201*^9, 3.608270572069449*^9}, {3.608270825333173*^9, 
+  3.608270829794302*^9}}],
 
 Cell[BoxData[{
  RowBox[{
@@ -297,7 +297,15 @@ Cell[BoxData[{
   RowBox[{"ycurrent", "=", 
    RowBox[{"{", 
     RowBox[{
-     RowBox[{"\[Pi]", "+", "0.2"}], ",", ".1"}], "}"}]}], 
+     RowBox[{"\[Pi]", "+", 
+      RowBox[{"RandomReal", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", ".6"}], ",", ".6"}], "}"}], "]"}]}], ",", 
+     RowBox[{"RandomReal", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"-", ".1"}], ",", ".1"}], "}"}], "]"}]}], "}"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"kp", "=", "120"}], ";"}], "\[IndentingNewLine]", 
@@ -965,7 +973,8 @@ Cell[BoxData[{
    3.608230799311533*^9}, 3.608233829458221*^9, {3.608234856308907*^9, 
    3.608234880940103*^9}, {3.6082366913561077`*^9, 3.608236697093925*^9}, {
    3.6082372341277514`*^9, 3.60823725128868*^9}, {3.6082406090213327`*^9, 
-   3.608240611299944*^9}, {3.608242853632103*^9, 3.608242854031917*^9}}],
+   3.608240611299944*^9}, {3.608242853632103*^9, 3.608242854031917*^9}, {
+   3.6082707866722937`*^9, 3.608270817899686*^9}}],
 
 Cell[BoxData[{
  RowBox[{
@@ -1081,13 +1090,11 @@ Notebook[{
 Cell[557, 20, 1951, 54, 288, "Input",
  CellGroupingRules->{GroupTogetherGrouping, 10000.}],
 Cell[2511, 76, 402, 12, 82, "Input"],
-Cell[2916, 90, 1066, 28, 57, "Input",
- InitializationCell->True],
-Cell[3985, 120, 4456, 98, 309, "Input",
- InitializationCell->True],
-Cell[8444, 220, 827, 21, 78, "Input"],
-Cell[9274, 243, 35670, 724, 1738, "Input"],
-Cell[44947, 969, 3853, 91, 225, "Input"]
+Cell[2916, 90, 1039, 27, 57, "Input"],
+Cell[3958, 119, 4429, 97, 309, "Input"],
+Cell[8390, 218, 919, 23, 78, "Input"],
+Cell[9312, 243, 35965, 733, 1738, "Input"],
+Cell[45280, 978, 3853, 91, 225, "Input"]
 }
 ]
 *)
