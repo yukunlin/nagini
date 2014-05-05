@@ -11,12 +11,12 @@ random.seed()
 
 ORGANISIMS = 100
 TOP = 15
-RATIO_MUTANTS = 0.25
-NEURON_COUNT = [2, 10, 10, 10, 10, 1]
-FUNCTS = ["tansig", "tansig", "tansig", "tansig", "tansig", "purelin"]
-ITERATIONS = 1500
-WEIGHT_RANGE = 3.0
-EPOCH = 1000
+RATIO_MUTANTS = 0.1
+NEURON_COUNT = [4, 10, 10, 10, 1]
+FUNCTS = ["purelin", "purelin", "purelin", "purelin", "purelin"]
+ITERATIONS = 500
+WEIGHT_RANGE = 4.0
+EPOCH = 350
 POOLS = 64
 NUM_INPUTS = 4
 
@@ -86,15 +86,14 @@ def testOrganism((mlp, pendulum, steps)):
         mlpControl = mlp.mlp_output()[0,0]
 
         pendulum.update(mlpControl)
-        rotationError = abs(pendulum.rotational[0]- pi) + abs(pendulum.rotational[1])
+        rotationError = (pendulum.rotational[0]- pi)**2 + (pendulum.rotational[1])**2
+        translationalError = (pendulum.translational[0])**2 + (pendulum.translational[1])**2
 
         if abs(pendulum.rotational[0] - pi) > pi/2.0:
             rotationError = 1e9
 
-        translationalError = abs(pendulum.translational[0]) + abs(pendulum.translational[1])
-
-        if abs(pendulum.translational[0] > 1.5):
-            translationalError = 1e4
+        if abs(pendulum.translational[0] > 1.3):
+            translationalError =  1e4
 
         error = rotationError + translationalError
         errs.append(error)
@@ -114,20 +113,37 @@ def outputControls(mlp, pendulum, steps):
 
     return controls
 
-def testPopulation(population, pendulums):
+def testPopulation(population, pendulumLeft, pendulumRight):
     p = Pool(POOLS)
-    args = []
-    initialRotation = pendulums[0].rotational
+    argsLeft = []
+    argsRight = []
+    pairs = []
+
+    initialRotation = pendulumLeft[0].rotational
 
     for x in range(ORGANISIMS):
-        args.append((population[x], pendulums[x], ITERATIONS))
-    Lpairs = p.map(testOrganism, args)
+        argsLeft.append((population[x], pendulumLeft[x], ITERATIONS))
 
-    sortedPairs = sortByFitness(Lpairs)
+    for x in range(ORGANISIMS):
+        argsRight.append((population[x], pendulumRight[x], ITERATIONS))
 
-    print("initial [theta, omega]: " + str(map(lambda x : "{:.4f}".format(x), list(initialRotation))) + ", sum abs(error): " + str(sortedPairs[0][0]))
-    print("final [theta, omega]: " + str(sortedPairs[0][2].rotational))
-    print("final [x, x']: " + str(sortedPairs[0][2].translational))
+    Lpairs = p.map(testOrganism, argsLeft)
+    Rpairs = p.map(testOrganism, argsRight)
+
+    for x in range(ORGANISIMS):
+        pairs.append( [ Lpairs[x][0] + Rpairs[x][0], Lpairs[x][1], Lpairs[x][2], Rpairs[x][2] ] )
+
+    sortedPairs = sortByFitness(pairs)
+
+    print("initial offset: " + str( list( abs( initialRotation - array([pi, 0]) ) ) ) )
+
+    print("final left  rotational: " + str(sortedPairs[0][2].rotational))
+    print("final right rotational: " + str(sortedPairs[0][3].rotational))
+
+    print("final left  translational: " + str(sortedPairs[0][2].translational))
+    print("final right translational: " + str(sortedPairs[0][3].translational))
+
+    print("min error: " + str(sortedPairs[0][0]))
 
     p.close()
     return map(lambda x : x[1], sortedPairs )
@@ -155,17 +171,22 @@ if __name__ == "__main__":
 
     for x in range(EPOCH):
 
-        print("progress: " + "{:.3f}".format(100.0 * float(x)/float(EPOCH)) + "%")
-        
-        thetaChoices = [random.uniform(-0.7,-0.6), random.uniform(0.6, 0.7)]
-        initialRotation = array([pi + random.choice(thetaChoices), random.uniform(-0.1,0.1)])
+
+        thetaChoices = [random.uniform(-0.7,-0.5), random.uniform(0.5, 0.7)]
+
+        initialRotationLeft = array([pi + thetaChoices[0], random.uniform(-0.1,0.1)])
+        initialRotationRight = array([pi + thetaChoices[1], random.uniform(-0.1,0.1)])
         initialTranslation = array([random.uniform(-0.1,0.1), random.uniform(-0.1,0.1)])
-        pendulums = generatePendulums(initialRotation, initialTranslation)
-        sortedPopulation = testPopulation(population, pendulums)
+
+        pendulumLeft = generatePendulums(initialRotationLeft, initialTranslation)
+        pendulumRight = generatePendulums(initialRotationRight, initialTranslation)
+
+        sortedPopulation = testPopulation(population, pendulumLeft, pendulumRight)
         if x == EPOCH - 1:
             best = sortedPopulation[0]
 
         population = crossBreed(sortedPopulation)
+        print("progress: " + "{:.3f}".format(100.0 * float(x)/float(EPOCH)) + "%")
 
 
     newPend = InvertedPendulum(array([pi+0.5,0]))
