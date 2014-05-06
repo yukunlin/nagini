@@ -1,11 +1,10 @@
 import random
 import sys
+import multiprocessing
 
-from logger import *
 from mlp import *
 from pendulum import *
 from numpy import *
-from multiprocessing import Pool
 
 random.seed()
 
@@ -17,7 +16,7 @@ FUNCTS = ["purelin", "purelin", "purelin", "purelin", "purelin"]
 ITERATIONS = 1000
 WEIGHT_RANGE = 4.0
 EPOCH = 500
-POOLS = 64
+POOLS = multiprocessing.cpu_count()
 NUM_INPUTS = 4
 
 def breed(mlpA, mlpB):
@@ -114,7 +113,7 @@ def outputControls(mlp, pendulum, steps):
     return controls
 
 def testPopulation(population, pendulumLeft, pendulumRight):
-    p = Pool(POOLS)
+    p = multiprocessing.Pool(POOLS)
     argsLeft = []
     argsRight = []
     pairs = []
@@ -191,10 +190,6 @@ if __name__ == "__main__":
 
     newPend = InvertedPendulum(array([pi+0.5,0]))
     bestControls = outputControls(best,newPend,ITERATIONS)
-
-    log = Logger("controls.csv")
-    log.write(bestControls)
-    log.close()
 
     weightsFile = open("weights.txt", 'w')
 
