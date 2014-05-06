@@ -174,8 +174,8 @@ if __name__ == "__main__":
 
         thetaChoices = [random.uniform(-0.7,-0.4), random.uniform(0.4, 0.7)]
 
-        initialRotationLeft = array([pi + thetaChoices[0], random.uniform(-0.1,0.1)])
-        initialRotationRight = array([pi + thetaChoices[1], random.uniform(-0.1,0.1)])
+        initialRotationLeft = array([pi + thetaChoices[0], random.uniform(-0.5,0.5)])
+        initialRotationRight = array([pi + thetaChoices[1], random.uniform(-0.5,0.5)])
         initialTranslation = array([random.uniform(-0.1,0.1), random.uniform(-0.1,0.1)])
 
         pendulumLeft = generatePendulums(initialRotationLeft, initialTranslation)
