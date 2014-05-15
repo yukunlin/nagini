@@ -11,22 +11,36 @@ from numpy.matrixlib import *
 
 # Activation functions
 def tansig(x):
+    """
+    tansig activation function
+    """
     return math.tanh(x)
 
 
 def logsig(x):
+    """
+    logsig activation function
+    """
     return 1/(1+math.exp(-float(x)))
 
 
 def hardlim(x):
+    """
+    hardlim activation function
+    """
     return 0.5 * (sign(x) + 1)
 
 
 def hardlims(x):
+    """
+    hardlims activation function
+    """
     return sign(x)
 
-# activtion function and derivative
 def afun(name, x, discrete_flag):
+    """
+    activtion function
+    """
     if discrete_flag == 0:
         return {
         'tansig': lambda y: tansig(y),
@@ -46,6 +60,9 @@ def afun(name, x, discrete_flag):
 
 
 def adfun(name, x):
+    """
+    derivative of activtion function
+    """
     return {
         'tansig': lambda y: 1-math.pow(tansig(y), 2),
         'logsig': lambda y: logsig(y)*(1-logsig(y)),
@@ -59,6 +76,9 @@ afun_vec = vectorize(afun)
 adfun_vec = vectorize(adfun)
 
 class MLP:
+    """
+    feedforward MLP code
+    """
     def __init__(self, input_size=0, neuron_count=0, activfuncts=[]):
         self.input = []
         self.input_size = input_size
@@ -84,9 +104,10 @@ class MLP:
         self.activfuncts = activfuncts
         self.bias = []
 
-# Generate weights and bias for the network.
     def genWB(self, valrange):
-
+        """
+        Generate weights and bias for the network.
+        """
         for i in range(self.num_layers):
 
             if i == 0:
@@ -104,6 +125,9 @@ class MLP:
 
 # Updaters
     def nup(self, curr_layer):
+        """
+        update netvalue for single layer
+        """
         input_layer = (curr_layer == 0)
 
         if input_layer:
@@ -114,6 +138,9 @@ class MLP:
         self.netvals[curr_layer] = ((self.weights[curr_layer] * layer_input) + self.bias[curr_layer])
 
     def aup(self, curr_layer):
+        """
+        update activationvalue for single layer 
+        """
         self.nup(curr_layer)
 
         curr_afun = self.activfuncts[curr_layer]
@@ -123,6 +150,9 @@ class MLP:
                                 self.discrete_out_flag))
 
     def aups(self, input):
+        """
+        do full feedforward cycle 
+        """
         self.input = input
         for layer in xrange(self.num_layers):
             self.aup(layer)
@@ -131,6 +161,9 @@ class MLP:
         return self.activvals[self.num_layers-1]
 
 def main():
+    """
+    Example
+    """
     a = MLP(input_size=3, neuron_count=[3, 2], activfuncts=['tansig', 'tansig'])
     a.genWB(2000)
     # a.aups(array([[1], [2], [3]]))
