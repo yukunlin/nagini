@@ -37,7 +37,12 @@
 <h2>
 <a name="background" class="anchor" href="#background"><span class="octicon octicon-link"></span></a>Background</h2>
 
-<p>The task of a controller is to determine and manipulate the inputs of a system in a way such that the output of that system matches with some desired outputs. For the purpose of maintaining a stable desired output, PID (proportional, integral, derivative) controllers are typically used.</p>
+<p>
+The task of a controller is to determine and manipulate the inputs of a
+system in a way such that the output of that system matches with some desired
+outputs. For the purpose of maintaining a stable desired output, PID
+(proportional, integral, derivative) controllers are typically used.
+</p>
 
 <h2>
 <a name="problem-statement" class="anchor" href="#problem-statement"><span class="octicon octicon-link"></span></a>Problem Statement</h2>
@@ -56,18 +61,45 @@ coupled PID controller is used, one to keep the pendulum balance, and one to
 maintain the horizontal postion of the system.
 </p>
 
-<h2>
-<a name="approach" class="anchor" href="#approach"><span class="octicon octicon-link"></span></a>Approach</h2>
-
-<p>Our goal was to design a recurrent neural network (RNN) that is able perform as well as (or better) than a PID controller at balancing the inverted pendulum.
+<p>
+Our goal is to design a neural network that is able perform as well as
+or better than a PID controller at balancing the inverted pendulum.
 </p>
 
-<p>In the end we used a genetic algorithm, operating on a population of MLP (multilayer perceptron).
-Our code contains the feedforward functionality of an MLP, and then instantiates a randomized MLP population.
-Breeding is done by taking an average of the weights of the parent MLPs.
-The weighting of the average is randomized.
-We breed MLP controllers against a fitness function based on the deviation from desired final state.
-The better MLP controllers generated are capable of pendulum stability with no translational motion. 
+<h2>
+<a name="method" class="anchor" href="#method"><span class="octicon
+        octicon-link"></span></a>Method
+</h2>
+
+<h3>
+<a name="training" class="anchor" href="#training"><span class="octicon
+        octicon-link"></span></a>Training
+</h3>
+
+<p>
+A genetic algorithm was used to evolve the optimal weights and biases for the
+neural network controller. Each network, represented as a list of weights and
+biases, is an organisms. THe population consists of 100 organisms.
+</p>
+
+<p>
+
+</p>
+
+Our code contains the
+feedforward functionality of an MLP, and then instantiates a randomized MLP
+population. Breeding is done by taking an average of the weights of the parent
+MLPs. The weighting of the average is randomized.  We breed MLP controllers
+against a fitness function based on the deviation from desired final state.
+The better MLP controllers generated are capable of pendulum stability with no
+translational motion.
+
+<h2><a name="results" class="anchor" href="#results"><span class="octicon octicon-link"></span></a>Results</h2>
+
+<p>
+The genetic algorithm is able to evolve a optimal set of weights and biases for
+a controller that balances the inverted pendulum but also centers the
+cart-pendulum system.
 </p>
 
 <h2>
