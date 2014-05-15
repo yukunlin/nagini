@@ -38,8 +38,6 @@ class InvertedPendulum:
 
         self.translational[0] = clip(-1.0e300, self.translational[0], 1.0e300)
         self.translational[1] = clip(-1.0e300, self.translational[1], 1.0e300)
-        #print((self.control / self.MASS) * self.DT)
-        #print(self.translational[1])
         self.translational[1] += (self.control / self.MASS) * self.DT
         self.translational[0] += self.translational[1] * self.DT
         self.rotational = self.rungeKutta(self.rotational)

@@ -20,6 +20,9 @@ POOLS = multiprocessing.cpu_count()
 NUM_INPUTS = 4
 
 def breed(mlpA, mlpB):
+    """
+    Takes two MLPs and crosses them, with probaility RATIO_MUTANTS of mutation.
+    """
     weightsA = mlpA.weights
     biasesA  = mlpA.bias
     weightsB = mlpB.weights
@@ -40,6 +43,7 @@ def breed(mlpA, mlpB):
         weightsB = mutant.weights
         biasesB = mutant.bias
 
+    # Random weighted average
     for i in range(len(weightsA)):
         newWeights.append(proportionA * weightsA[i] + proportionB * weightsB[i])
         newBiases.append(proportionA * biasesA[i] + proportionB * biasesB[i])
@@ -51,6 +55,9 @@ def breed(mlpA, mlpB):
     return child
 
 def crossBreed(L):
+    """
+    Given a population sorted by fitness, crosses the fittest MLPs
+    """
     nextGeneration = [L[0]]
     count = 0
 
@@ -68,14 +75,23 @@ def crossBreed(L):
     return nextGeneration
 
 def sortByFitness(Lpair):
+    """
+    Sorts the population by fitness. MLP with low errors have high fitness.
+    """
     return sorted(Lpair, cmp = lambda x, y : 1 if x[0] > y[0] else -1)
 
 def mutation():
+    """
+    Create a mutant MLP
+    """
     mutant = MLP(NUM_INPUTS,NEURON_COUNT, FUNCTS)
     mutant.genWB(WEIGHT_RANGE)
     return mutant
 
 def testOrganism((mlp, pendulum, steps)):
+    """
+    Used a MLP to control a simulated inverted pendulum
+    """
     errs =[]
 
     for x in range(steps):
@@ -98,19 +114,6 @@ def testOrganism((mlp, pendulum, steps)):
         errs.append(error)
 
     return [sum(errs), mlp, pendulum]
-
-def outputControls(mlp, pendulum, steps):
-    controls = []
-    for x in range(steps):
-        mlpInputs = list(pendulum.rotational) +  list(pendulum.translational)
-        mlpInputs = array(map(lambda x: [x], mlpInputs))
-        mlp.aups(mlpInputs)
-        mlpControl = mlp.mlp_output()[0,0]
-        line = [mlpControl] + list(pendulum.rotational) + list(pendulum.translational)
-        pendulum.update(mlpControl)
-        controls.append(line)
-
-    return controls
 
 def testPopulation(population, pendulumLeft, pendulumRight):
     p = multiprocessing.Pool(POOLS)
@@ -189,7 +192,6 @@ if __name__ == "__main__":
 
 
     newPend = InvertedPendulum(array([pi+0.5,0]))
-    bestControls = outputControls(best,newPend,ITERATIONS)
 
     weightsFile = open("weights.txt", 'w')
 
