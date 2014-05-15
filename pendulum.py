@@ -34,12 +34,16 @@ class InvertedPendulum:
 
     def update(self, controlInput):
         self.time += self.DT
+        # Bound control input
         self.control = clip(-20.0, controlInput, 20.0)
 
+        # Prevent overflow (when training, some MLPs really don't work at all)
         self.translational[0] = clip(-1.0e300, self.translational[0], 1.0e300)
         self.translational[1] = clip(-1.0e300, self.translational[1], 1.0e300)
+
         self.translational[1] += (self.control / self.MASS) * self.DT
         self.translational[0] += self.translational[1] * self.DT
+
         self.rotational = self.rungeKutta(self.rotational)
 
 def clip(lo, x, hi):

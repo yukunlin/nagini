@@ -116,6 +116,10 @@ def testOrganism((mlp, pendulum, steps)):
     return [sum(errs), mlp, pendulum]
 
 def testPopulation(population, pendulumLeft, pendulumRight):
+    """
+    Like testOrganism, but does it for every MLP in the population.
+    For each MLP, test with pendulum tilted left and right.
+    """
     p = multiprocessing.Pool(POOLS)
     argsLeft = []
     argsRight = []
@@ -151,6 +155,9 @@ def testPopulation(population, pendulumLeft, pendulumRight):
     return map(lambda x : x[1], sortedPairs )
 
 def populate():
+    """
+    Initializes the population
+    """
     organisms = []
     for x in range(ORGANISIMS):
         org = MLP(NUM_INPUTS, NEURON_COUNT, FUNCTS)
@@ -160,6 +167,9 @@ def populate():
     return organisms
 
 def generatePendulums(rotational, translational):
+    """
+    Initializes a tilted inverted pendulum
+    """
     pendulums = []
     for x in range(ORGANISIMS):
         pendulums.append(InvertedPendulum(rotational, translational))
@@ -172,8 +182,6 @@ if __name__ == "__main__":
     best = None
 
     for x in range(EPOCH):
-
-
         thetaChoices = [random.uniform(-0.7,-0.4), random.uniform(0.4, 0.7)]
 
         initialRotationLeft = array([pi + thetaChoices[0], random.uniform(-0.5,0.5)])
