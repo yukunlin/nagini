@@ -8,7 +8,7 @@ A working set of weights and biases are provided in `weights_working.txt` and
 (evaluate all cells after opening it).
 
 ###Running the genetic algorithm
-Python 2.7 and numpy is required. Run
+Python 2.7 and [numpy](http://www.numpy.org/) is required. Run
 ```
 python trainer.py
 ```
