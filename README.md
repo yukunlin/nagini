@@ -1,4 +1,4 @@
-##Nagini: Evolving a controller using a genetic algorithm
+##Evolving a Inverted Pendulum Controller with a Genetic Algorithm
 
 See [here](http://yukunlin.github.io/nagini/) for more details.
 
