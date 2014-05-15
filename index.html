@@ -59,9 +59,15 @@ maintain the horizontal postion of the system.
 <h2>
 <a name="approach" class="anchor" href="#approach"><span class="octicon octicon-link"></span></a>Approach</h2>
 
-<p>Our goal is to design a recurrent neural network (RNN) that is able perform as well as (or better) than a PID controller at balancing the inverted pendulum.
-We will do this through an RNN implementation in Theano.</p>
+<p>Our goal was to design a recurrent neural network (RNN) that is able perform as well as (or better) than a PID controller at balancing the inverted pendulum.
+</p>
 
+<p>In the end we used a genetic algorithm, operating on a population of MLP (multilayer perceptron).
+Our code contains the feedforward functionality of an MLP, and then instantiates a randomized MLP population.
+Breeding is done by taking an average of the weights of the parent MLPs.
+The weighting of the average is randomized.
+We breed MLP controllers against a fitness function based on the deviation from desired final state.
+</p>
 
 <h2>
 <a name="reference" class="anchor" href="#reference"><span class="octicon octicon-link"></span></a>Reference</h2>
