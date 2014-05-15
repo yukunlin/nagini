@@ -1,4 +1,4 @@
-##Evolving a Inverted Pendulum Controller with a Genetic Algorithm
+##Evolving an Inverted Pendulum Controller with a Genetic Algorithm
 
 See [here](http://yukunlin.github.io/nagini/) for more details.
 
