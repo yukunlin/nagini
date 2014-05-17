@@ -1,208 +1,274 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Nagini : " />
+    <head>
+        <meta charset='utf-8' />
+        <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+        <meta name="description" content="Nagini : " />
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>Nagini</title>
-  </head>
+        <title>Nagini</title>
+    </head>
 
-  <body>
+    <body>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/yukunlin/nagini">View on GitHub</a>
+        <!-- HEADER -->
+        <div id="header_wrap" class="outer">
+            <header class="inner">
+            <a id="forkme_banner" href="https://github.com/yukunlin/nagini">View on GitHub</a>
 
-          <h1 id="project_title">NaGInI</h1>
-          <h2 id="project_tagline"></h2>
+            <h1 id="project_title">NaGInI</h1>
+            <h2 id="project_tagline"></h2>
 
             <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/yukunlin/nagini/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/yukunlin/nagini/tarball/master">Download this project as a tar.gz file</a>
+            <a class="zip_download_link" href="https://github.com/yukunlin/nagini/zipball/master">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="https://github.com/yukunlin/nagini/tarball/master">Download this project as a tar.gz file</a>
             </section>
-        </header>
-    </div>
+            </header>
+        </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
-<a name="nagini-neural-networks-controller-for-a-generated-inverted-pendulum-interface" class="anchor" href="#nagini-neural-networks-controller-for-a-generated-inverted-pendulum-interface"><span class="octicon octicon-link"></span></a><font color="6F54B3">NaGInI</font>: <font color="6F54B3">N</font>eur<font color="6F54B3">a</font>l Networks Controller for a <font color="6F54B3">G</font>enerated <font color="6F54B3">In</font>verted pendulum <font color="6F54B3">I</font>nterface</h1>
+        <!-- MAIN CONTENT -->
+        <div id="main_content_wrap" class="outer">
+            <section id="main_content" class="inner">
+            <h1>
+                <a
+                    name="nagini-neural-networks-controller-for-a-generated-inverted-pendulum-interface"
+                    class="anchor"
+                    href="#nagini-neural-networks-controller-for-a-generated-inverted-pendulum-interface"><span
+                        class="octicon octicon-link"></span></a>Evolving an Inverted Pendulum Controller with a Genetic Algorithm</h1>
 
-<h2>
-<a name="background" class="anchor" href="#background"><span class="octicon octicon-link"></span></a>Background</h2>
+            <h2>
+                <a name="background" class="anchor" href="#background"><span class="octicon octicon-link"></span></a>Background</h2>
 
-<p>
-The task of a controller is to determine and manipulate the inputs of a
-system in a way such that the output of that system matches with some desired
-outputs. For the purpose of maintaining a stable desired output, PID
-(proportional, integral, derivative) controllers are typically used.
-</p>
+            <p>
+            The task of a controller is to determine and manipulate the inputs of a
+            system in a way such that the output of that system matches with some desired
+            outputs. For the purpose of maintaining a stable desired output, PID
+            (proportional, integral, derivative) controllers are typically used.
+            </p>
 
-<h2>
-<a name="problem-statement" class="anchor" href="#problem-statement"><span class="octicon octicon-link"></span></a>Problem Statement</h2>
+            <h2>
+                <a name="problem-statement" class="anchor" href="#problem-statement"><span class="octicon octicon-link"></span></a>Problem Statement</h2>
 
-<p>
-Balancing an inverted pendulum is a classic control problem. Typically, a
-coupled PID controller is used, one to keep the pendulum balance, and one to
-maintain the horizontal position of the system.
-</p>
+            <p>
+            Balancing an inverted pendulum is a classic control problem. Typically, a coupled PID
+            controller is used, one to keep the pendulum balanced, and one to maintain the
+            horizontal position of the system.
+            </p>
 
-<p>
-Our goal is to train a neural network that is able perform as well as
-or better than a PID controller at balancing the inverted pendulum.
-</p>
+            <p>
+            Our goal is to train a multilayer perceptron (MLP) that is able perform as well as or
+            better than a PID controller at balancing the inverted pendulum. The MLP will be given 4
+            inputs: angle of rotation, rate of rotation, translational position, translational
+            velocity, and will output the control force.
+            </p>
 
-<h2>
-<a name="genetic" class="anchor" href="#genetic"><span class="octicon
-        octicon-link"></span></a>Genetic Algorithm
-</h2>
+            <h2>
+                <a name="genetic" class="anchor" href="#genetic"><span class="octicon
+                        octicon-link"></span></a>Genetic Algorithm
+            </h2>
 
-<h4>
-<a name="organisms" class="anchor" href="#organisms"><span class="octicon
-        octicon-link"></span></a>Organisms
-</h4>
+            <h4>
+                <a name="organisms" class="anchor" href="#organisms"><span class="octicon
+                        octicon-link"></span></a>Organisms
+            </h4>
 
-<p>
-A genetic algorithm (GA) was used to evolve the optimal weights and biases for the
-neural network controller. Each network, represented as a list of weights and
-biases, is an organisms. The population consists of 100 organisms.
-</p>
+            <p>
+            A genetic algorithm (GA) is used to evolve the optimal weights and biases for the MLP
+            controller. Each MLP, represented as a list of weights and biases matrices, plays the
+            role of an organism. The population consists of 100
+            MLPs.
+            </p>
 
-<h4>
-<a name="crossing" class="anchor" href="#crossing"><span class="octicon
-        octicon-link"></span></a>Crossing
-</h4>
+            <h4>
+                <a name="crossing" class="anchor" href="#crossing"><span class="octicon
+                        octicon-link"></span></a>Crossing
+            </h4>
 
-<p>
-Two organisms are crossed by taking the weighted average of their corresponding
-weights and biases. This weighted average is drawn from a uniform distribution
-between 0 and 1.  To prevent the population from being stuck at some local
-minima, mutants (MLPs with randomly initialized weights and biases) are
-introduced to the population randomly in each generation.
-</p>
+            <p>
+            Two MLPs are crossed by taking the weighted average of their corresponding
+            weights and biases. This weighted average is drawn from a uniform distribution
+            between 0 and 1.  To prevent the population from being stuck at some local
+            minima, mutants (MLPs with randomly initialized weights and biases) are
+            introduced to the population randomly in each generation.
+            </p>
 
-<h4>
-<a name="fitness" class="anchor" href="#fitness"><span class="octicon
-        octicon-link"></span></a>Fitness
-</h4>
+            <p>
+            For this form of crossing, it was found that using linear activation functions worked
+            best. Even though this makes the MLP equivalent to an adaline, maintaining multiple
+            layers and neurons helped the MLPs evolved faster.
+            </p>
 
-<p>
-In each generation of the GA, each organism is used to control a simulated
-inverted system (initialized with some random perturbation in both direction)
-for the same amount of time. At each time step, the desired angle of the
-pendulum is 180 degrees (upright), the desired angular velocity is 0, the
-desired translational position is 0 (center), and the desired translational
-speed is 0 (stationary).
-</p>
+            <h4>
+                <a name="fitness" class="anchor" href="#fitness"><span class="octicon
+                        octicon-link"></span></a>Fitness
+            </h4>
 
-<p>
-The "cost" of each organism is determined by summing the square of the
-difference between actual and desired.  Organisms with lower "cost" are fitter.
-The 15 fittest organism are chosen to do pair-wise crossing to produce the
-population for the next generation.
-</p>
+            <p>
+            In each generation of the GA, each MLP is used to control a simulated inverted system
+            (initialized with random left and right perturbations) for 1000 time steps, equivalent
+            to 10 seconds. At each time step, we set the desired angle of the pendulum to 180
+            degrees (upright), the desired angular velocity to 0, the desired translational position
+            to 0 (center), and the desired translational speed to 0 (stationary).
+            </p>
 
-<h4>
-<a name="pair" class="anchor" href="#pair"><span class="octicon
-        octicon-link"></span></a>Matching Pairs
-</h4>
+            <p>
+            The error of each MLP is determined by summing the square of the difference between
+            actual and desired at each time step. Organisms with lower error are fitter.  The 15
+            fittest MLP are chosen to do pair-wise crossing to produce the population for the next
+            generation.
+            </p>
 
-<h2><a name="results" class="anchor" href="#results"><span class="octicon
-            octicon-link"></span></a>Results
-</h2>
+            <h2><a name="results" class="anchor" href="#results"><span class="octicon
+                        octicon-link"></span></a>Results
+            </h2>
 
-<p>
-After evolving for 1000 generations, the genetic algorithm is able to evolve a
-optimal set of weights and biases for a controller that balances the inverted
-pendulum but also centers the cart-pendulum system. On a server with 4 AMD
-Opteron 6276 CPUs (64 cores total), evolving for 1000 generations takes
-approximately an hour.
-</p>
+            <p>
+            After evolving for 1000 generations, the genetic algorithm is able to produce an optimal
+            set of weights and biases for a controller that balances and centers the inverted
+            pendulum. On a Gentoo server with 4 AMD Opteron 6276 CPUs (64 cores total), evolving for
+            1000 generations takes approximately 1 hour and 50 minutes.
+            </p>
 
+            <h4>
+                <a name="evolution" class="anchor" href="#evolution"><span class="octicon
+                        octicon-link"></span></a>Evolution Snapshots
+            </h4>
 
-<h4>
-<a name="demo" class="anchor" href="#demo"><span class="octicon
-        octicon-link"></span></a>Demonstration and Comparison
-</h4>
-<p>
-A demonstration of an evolved network controlling the inverted-pendulum system
-is shown below.
-</p>
+            <div align="center">
+                <table cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" align="center">
+                    <tr>
+                        <td>
+                            <video width="319" height="157" controls>
+                            <source src="videos/o10.mp4" type="video/mp4">
+                            <source src="videos/o10.webm" type="video/webm">
+                            Your browser does not support the video tag.
+                            </video>
+                        </td>
+                        <td>
+                            <video width="319" height="157" controls>
+                            <source src="videos/o20.mp4" type="video/mp4">
+                            <source src="videos/o20.webm" type="video/webm">
+                            Your browser does not support the video tag.
+                            </video>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <video width="319" height="157" controls>
+                            <source src="videos/o50.mp4" type="video/mp4">
+                            <source src="videos/o50.webm" type="video/webm">
+                            Your browser does not support the video tag.
+                            </video>
+                        </td>
+                        <td>
+                            <video width="319" height="157" controls>
+                            <source src="videos/o200.mp4" type="video/mp4">
+                            <source src="videos/o200.webm" type="video/webm">
+                            Your browser does not support the video tag.
+                            </video>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
-<p align="center">
-<video width="640" height="320" controls>
-<source src="videos/nncf.mp4" type="video/mp4">
-<source src="videos/nncf.webm" type="video/webm">
-Your browser does not support the video tag.
-</video>
-</p>
+            <p>
+            The videos above show the best MLP at generation 10, 20, 50 and 200 respectively from
+            top to bottom left to right. At generation 10, the MLP is able to prevent the pendulum
+            from falling over, but is unable to stabilize or center the system.  At generation 20,
+            the MLP is initially better at centering the system, but still goes off the frame. At
+            generation 50, the MLP is now able to prevent the system from moving off frame, but
+            still has some difficulty stabilizing the system. By generation 200, the MLP is able to
+            both stabilize and center system, but exhibit a slight overshoot.
+            </p>
 
-<p>
-For comparison, the next demonstration shows a coupled PID controller doing the
-same task.
-</p>
+            <p align="center">
+            <img src="images/evolving.png" style="border:none" alt="Error" width="450">
+            </p>
 
-<p align="center">
-<video width="640" height="320" controls>
-<source src="videos/pidcf.mp4" type="video/mp4">
-<source src="videos/pidcf.webm" type="video/webm">
-Your browser does not support the video tag.
-</video>
-</p>
+            <p>
+            The plot above shows the error of the fittest MLP at each generation. Jumps in the error
+            are due to the pendulum being initialized randomly with more extreme perturbations.
+            </p>
 
-<p>
-Even though the PID controller stabilizes the system faster, its control gains
-has to be carefully tuned. It's conceivable that if the genetic algorithm
-evolved for even more iterations, it could produce a network that is able to
-match the performance of the PID controller.
+            <h4>
+                <a name="demo" class="anchor" href="#demo"><span class="octicon
+                        octicon-link"></span></a>Demonstration and Comparison
+            </h4>
+            <p>
+            A demonstration of an evolved MLP (after 1000 generations) stabilizing an
+            inverted pendulum is shown below.
+            </p>
 
-<h2>
-<a name="reference" class="anchor" href="#reference"><span class="octicon octicon-link"></span></a>Reference</h2>
+            <p align="center">
+            <video width="640" height="320" controls>
+            <source src="videos/nncf.mp4" type="video/mp4">
+            <source src="videos/nncf.webm" type="video/webm">
+            Your browser does not support the video tag.
+            </video>
+            </p>
 
-<a href="http://deeplearning.net/tutorial/DBN.html">http://deeplearning.net/tutorial/DBN.html</a>
-<p style="padding-top:-5px;"></p>
+            <p>
+            For comparison, the next demonstration shows a coupled PID controller doing the
+            same task.
+            </p>
 
-<a href="http://www.iro.umontreal.ca/~bengioy/papers/ftml_book.pdf">http://www.iro.umontreal.ca/~bengioy/papers/ftml_book.pdf</a>
-<p style="padding-top:-5px;"></p>
+            <p align="center">
+            <video width="640" height="320" controls>
+            <source src="videos/pidcf.mp4" type="video/mp4">
+            <source src="videos/pidcf.webm" type="video/webm">
+            Your browser does not support the video tag.
+            </video>
+            </p>
 
-<a href="http://www.cs.toronto.edu/~ranzato/publications/DistBeliefNIPS2012_withAppendix.pdf">http://www.cs.toronto.edu/~ranzato/publications/DistBeliefNIPS2012_withAppendix.pdf</a>
-<p style="padding-top:-5px;"></p>
+            <p>
+            The evolved MLP controller stabilizes the inverted pendulum as quickly as the PID
+            controller, and exhibits virtually no overshoot. In addition, the evolved MLP controller
+            is faster at centering the system than the PID controller. It's possible that additional
+            gain adjustments could make the PID controller better; the advantage of
+            evolving the controller is that the fine tune adjustments are handled automatically by
+            the GA and doesn't have to be done manually.
 
-<a href="http://www.cs.toronto.edu/~hinton/absps/fastnc.pdf">http://www.cs.toronto.edu/~hinton/absps/fastnc.pdf</a>
-<p style="padding-top:-5px;"></p>
+            <h2>
+                <a name="reference" class="anchor" href="#reference"><span class="octicon
+                        octicon-link"></span></a>References</h2>
 
-<a href="http://www.iro.umontreal.ca/~lisa/pointeurs/theano_scipy2010.pdf">http://www.iro.umontreal.ca/~lisa/pointeurs/theano_scipy2010.pdf</a>
-<p style="padding-top:-5px;"></p>
+            <a href="http://deeplearning.net/tutorial/DBN.html">http://deeplearning.net/tutorial/DBN.html</a>
+            <p style="padding-top:-5px;"></p>
 
-<a href="https://www.stanford.edu/class/ee373b/NNselflearningcontrolsystems.pdf">https://www.stanford.edu/class/ee373b/NNselflearningcontrolsystems.pdf</a>
-<p style="padding-top:-5px;"></p>
+            <a href="http://www.iro.umontreal.ca/~bengioy/papers/ftml_book.pdf">http://www.iro.umontreal.ca/~bengioy/papers/ftml_book.pdf</a>
+            <p style="padding-top:-5px;"></p>
 
-<a href="http://research.cs.wisc.edu/machine-learning/shavlik-group/scott.NeuralComp92.pdf">http://research.cs.wisc.edu/machine-learning/shavlik-group/scott.NeuralComp92.pdf</a>
-<p style="padding-top:-5px;"></p>
+            <a href="http://www.cs.toronto.edu/~ranzato/publications/DistBeliefNIPS2012_withAppendix.pdf">http://www.cs.toronto.edu/~ranzato/publications/DistBeliefNIPS2012_withAppendix.pdf</a>
+            <p style="padding-top:-5px;"></p>
 
-<a href="http://archive.ics.uci.edu/ml/index.html">http://archive.ics.uci.edu/ml/index.html</a>
+            <a href="http://www.cs.toronto.edu/~hinton/absps/fastnc.pdf">http://www.cs.toronto.edu/~hinton/absps/fastnc.pdf</a>
+            <p style="padding-top:-5px;"></p>
 
+            <a href="http://www.iro.umontreal.ca/~lisa/pointeurs/theano_scipy2010.pdf">http://www.iro.umontreal.ca/~lisa/pointeurs/theano_scipy2010.pdf</a>
+            <p style="padding-top:-5px;"></p>
 
-      </section>
-    </div>
+            <a href="https://www.stanford.edu/class/ee373b/NNselflearningcontrolsystems.pdf">https://www.stanford.edu/class/ee373b/NNselflearningcontrolsystems.pdf</a>
+            <p style="padding-top:-5px;"></p>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Nagini maintained by <a href="https://github.com/yukunlin">yukunlin</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+            <a href="http://research.cs.wisc.edu/machine-learning/shavlik-group/scott.NeuralComp92.pdf">http://research.cs.wisc.edu/machine-learning/shavlik-group/scott.NeuralComp92.pdf</a>
+            <p style="padding-top:-5px;"></p>
 
+            <a href="http://archive.ics.uci.edu/ml/index.html">http://archive.ics.uci.edu/ml/index.html</a>
 
+            </section>
 
-  </body>
+        </div>
+
+        <!-- FOOTER  -->
+        <div id="footer_wrap" class="outer">
+            <footer class="inner">
+            <p class="copyright">Nagini maintained by <a href="https://github.com/yukunlin">yukunlin</a></p>
+            <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+            </footer>
+        </div>
+    </body>
 </html>
 
 
