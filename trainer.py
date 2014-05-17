@@ -1,5 +1,6 @@
 import random
 import sys
+import os
 import multiprocessing
 
 from mlp import *
@@ -200,6 +201,9 @@ def writeOut(best, n):
 if __name__ == "__main__":
     population = populate()
     best = None
+
+    if not os.path.exists("output"):
+        os.makedirs("output")
 
     for x in range(EPOCH):
         thetaChoices = [random.uniform(-0.7,-0.4), random.uniform(0.4, 0.7)]
