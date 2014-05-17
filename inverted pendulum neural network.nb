@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     29700,        787]
-NotebookOptionsPosition[     29132,        765]
-NotebookOutlinePosition[     29548,        783]
-CellTagsIndexPosition[     29505,        780]
+NotebookDataLength[     30183,        803]
+NotebookOptionsPosition[     29615,        781]
+NotebookOutlinePosition[     30031,        799]
+CellTagsIndexPosition[     29988,        796]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -156,20 +156,29 @@ Cell[BoxData[{
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"L", "=", ".5"}], ";", "    ", 
+  RowBox[{
+   RowBox[{"L", "=", ".5"}], ";"}], "    ", 
   RowBox[{"(*", " ", 
    RowBox[{
     RowBox[{"Length", " ", "of", " ", "pendulum"}], ",", " ", 
-    RowBox[{"in", " ", "meters"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-  RowBox[{"g", " ", "=", " ", "9.81"}], ";", "  ", 
+    RowBox[{"in", " ", "meters"}]}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", " ", "=", " ", "9.81"}], ";"}], "  ", 
   RowBox[{"(*", " ", 
    RowBox[{
     RowBox[{"Gravitational", " ", "constant"}], ",", " ", 
     RowBox[{"in", " ", 
      RowBox[{
-      RowBox[{"meters", "/", "sec"}], "/", "sec"}]}]}], " ", "*)"}], 
-  "\[IndentingNewLine]", 
-  RowBox[{"msys", "=", "0.4"}], ";"}], "\[IndentingNewLine]", 
+      RowBox[{"meters", "/", "sec"}], "/", "sec"}]}]}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"msys", "=", "0.4"}], ";"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"Mass", " ", "of", " ", "system"}], ",", " ", 
+    RowBox[{"in", " ", "kg"}]}], " ", "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"f", "[", 
    RowBox[{"t_", ",", "y_"}], "]"}], ":=", 
@@ -196,8 +205,15 @@ Cell[BoxData[{
           RowBox[{
            FractionBox["c", "msys"], " ", 
            RowBox[{"Cos", "[", "\[Theta]", "]"}]}], "-", 
-          RowBox[{".01", "\[Omega]"}]}], ")"}]}]}], "}"}]}]}], 
-   "]"}]}], "\n", 
+          RowBox[{
+           RowBox[{"RandomReal", "[", 
+            RowBox[{"{", 
+             RowBox[{"0.02", ",", "0.07"}], "}"}], "]"}], "\[Omega]"}], "+", 
+          RowBox[{"RandomReal", "[", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", ".5"}], ",", ".5"}], "}"}], "]"}]}], ")"}]}]}], 
+      "}"}]}]}], "]"}]}], "\n", 
  RowBox[{
   RowBox[{"timeStep", "=", "0.01"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -210,11 +226,11 @@ Cell[BoxData[{
       RowBox[{"RandomReal", "[", 
        RowBox[{"{", 
         RowBox[{
-         RowBox[{"-", ".6"}], ",", ".6"}], "}"}], "]"}]}], ",", 
+         RowBox[{"-", ".7"}], ",", ".7"}], "}"}], "]"}]}], ",", 
      RowBox[{"RandomReal", "[", 
       RowBox[{"{", 
        RowBox[{
-        RowBox[{"-", ".1"}], ",", ".1"}], "}"}], "]"}]}], "}"}]}], 
+        RowBox[{"-", ".2"}], ",", ".2"}], "}"}], "]"}]}], "}"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"vi", "=", 
@@ -788,7 +804,7 @@ Cell[2121, 70, 305, 10, 82, "Input"],
 Cell[2429, 82, 701, 22, 57, "Input"],
 Cell[3133, 106, 1005, 28, 162, "Input"],
 Cell[4141, 136, 609, 18, 78, "Input"],
-Cell[4753, 156, 24375, 607, 1865, "Input"]
+Cell[4753, 156, 24858, 623, 1865, "Input"]
 }
 ]
 *)

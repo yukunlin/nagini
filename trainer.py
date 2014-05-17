@@ -15,7 +15,7 @@ NEURON_COUNT = [4, 10, 10, 10, 1]
 FUNCTS = ["purelin", "purelin", "purelin", "purelin", "purelin"]
 ITERATIONS = 1000
 WEIGHT_RANGE = 4.0
-EPOCH = 500
+EPOCH = 1000
 POOLS = multiprocessing.cpu_count()
 NUM_INPUTS = 4
 
@@ -176,6 +176,26 @@ def generatePendulums(rotational, translational):
 
     return pendulums
 
+def writeOut(best, n):
+    weightsFile = open("output/weights" + n + ".txt", 'w')
+
+    for m in best.weights:
+        mlist = str(m.tolist())
+        mlist = mlist.replace('[','{')
+        mlist = mlist.replace(']','}')
+        weightsFile.write(mlist + '\n')
+
+    weightsFile.close()
+
+    biasesFile = open("output/biases" + n + ".txt", 'w')
+
+    for m in best.bias:
+        mlist = str(m.tolist())
+        mlist = mlist.replace('[','{')
+        mlist = mlist.replace(']','}')
+        biasesFile.write(mlist + '\n')
+
+    biasesFile.close()
 
 if __name__ == "__main__":
     population = populate()
@@ -192,31 +212,15 @@ if __name__ == "__main__":
         pendulumRight = generatePendulums(initialRotationRight, initialTranslation)
 
         sortedPopulation = testPopulation(population, pendulumLeft, pendulumRight)
+
+        if x % 10 == 0:
+            writeOut(sortedPopulation[0], str(x))
+
         if x == EPOCH - 1:
             best = sortedPopulation[0]
 
         population = crossBreed(sortedPopulation)
         print("progress: " + "{:.3f}".format(100.0 * float(x)/float(EPOCH)) + "%")
 
+    writeOut(best, "")
 
-    newPend = InvertedPendulum(array([pi+0.5,0]))
-
-    weightsFile = open("weights.txt", 'w')
-
-    for m in best.weights:
-        mlist = str(m.tolist())
-        mlist = mlist.replace('[','{')
-        mlist = mlist.replace(']','}')
-        weightsFile.write(mlist + '\n')
-
-    weightsFile.close()
-
-    biasesFile = open("biases.txt", 'w')
-
-    for m in best.bias:
-        mlist = str(m.tolist())
-        mlist = mlist.replace('[','{')
-        mlist = mlist.replace(']','}')
-        biasesFile.write(mlist + '\n')
-
-    biasesFile.close()
