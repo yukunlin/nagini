@@ -11,7 +11,7 @@ random.seed()
 
 ORGANISIMS = 100
 TOP = 15
-RATIO_MUTANTS = 0.15
+RATIO_MUTANTS = 0.20
 NEURON_COUNT = [4, 10, 10, 10, 1]
 FUNCTS = ["purelin", "purelin", "purelin", "purelin", "purelin"]
 ITERATIONS = 1000
@@ -36,11 +36,11 @@ def breed(mlpA, mlpB):
     newBiases = []
 
     if random.random() < RATIO_MUTANTS:
-        mutant = mutation()
+        mutant = mutation(mlpA)
         weightsA = mutant.weights
         biasesA = mutant.bias
     if random.random() < RATIO_MUTANTS:
-        mutant = mutation()
+        mutant = mutation(mlpB)
         weightsB = mutant.weights
         biasesB = mutant.bias
 
@@ -81,13 +81,30 @@ def sortByFitness(Lpair):
     """
     return sorted(Lpair, cmp = lambda x, y : 1 if x[0] > y[0] else -1)
 
-def mutation():
+def mutation(mlp):
     """
     Create a mutant MLP
     """
+    choice = random.uniform(0.0, 1.0)
     mutant = MLP(NUM_INPUTS,NEURON_COUNT, FUNCTS)
-    mutant.genWB(WEIGHT_RANGE)
-    return mutant
+
+    if choice > 0.5:
+        mutant.genWB(WEIGHT_RANGE)
+        return mutant
+    else:
+        mutant.genWB(0.15)
+        newWeights = []
+        newBiases = []
+
+        for i in range(len(mlp.weights)):
+            newWeights.append(mutant.weights[i] + mlp.weights[i])
+            newBiases.append(mutant.bias[i] + mlp.bias[i])
+
+        mutant = MLP(NUM_INPUTS,NEURON_COUNT, FUNCTS)
+        mutant.weights = newWeights
+        mutant.bias = newBiases
+
+        return mutant
 
 def testOrganism((mlp, pendulum, steps)):
     """
