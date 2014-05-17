@@ -180,7 +180,7 @@
             the MLP is initially better at centering the system, but still goes off the frame. At
             generation 50, the MLP is now able to prevent the system from moving off frame, but
             still has some difficulty stabilizing the system. By generation 200, the MLP is able to
-            both stabilize and center system, but exhibit a slight overshoot.
+            both stabilize and center system, but exhibits a moderate amount of overshoot.
             </p>
 
             <p align="center">
@@ -224,7 +224,7 @@
 
             <p>
             The evolved MLP controller stabilizes the inverted pendulum as quickly as the PID
-            controller, and exhibits virtually no overshoot. In addition, the evolved MLP controller
+            controller, but exhibits less overshoot. In addition, the evolved MLP controller
             is faster at centering the system than the PID controller. It's possible that additional
             gain adjustments could make the PID controller better; the advantage of
             evolving the controller is that the fine tune adjustments are handled automatically by
